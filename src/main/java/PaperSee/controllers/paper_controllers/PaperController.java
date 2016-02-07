@@ -5,39 +5,33 @@ import inject.Inject;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
 
-public class PaperController extends HttpServlet {
+public class PaperController extends InjectAnnotationsPaperController {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	public static final String PAGE_OK = "/Paper.jsp";
-	public static final String PAGE_ERROR = "getAll.do";
+	public static final String PAGE_ERROR = "/404.jsp";
 	public static final String ATTRIBUTE_MODEL_TO_VIEW = "paper";
+	public static final String ATTRIBUTE_ERR = "errorString";
 	public static final String PARAM_ID = "id";
 
 	@Inject("paperDao")
-	private PaperDao paperDao;
-	public static String APP_CTX_PATH;
-	ApplicationContext context;
+	public PaperDao paperDao;
 
 	@Override
 	public void init() throws ServletException {
-		APP_CTX_PATH = getServletContext().getInitParameter("project_context");
-//		System.out.println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
-		context = new ClassPathXmlApplicationContext(APP_CTX_PATH);
-		paperDao = (PaperDao) context.getBean("paperDao");
+		super.init();
 	}
 
 	@Override
@@ -58,10 +52,12 @@ public class PaperController extends HttpServlet {
 					.include(req, resp);
 			return;
 		} catch (DaoException | NumberFormatException e) {
+			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
 			// System.err.println(">>>  Wrong ID");
 		}
 
 		// System.out.println(">>>  Redirect to :" + PAGE_ERROR);
-		resp.sendRedirect(PAGE_ERROR);
+//		resp.sendRedirect(PAGE_ERROR);
+		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}
 }

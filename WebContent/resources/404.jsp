@@ -8,6 +8,7 @@
 </head>
 <body>
 	<h1>"${pageContext.request.requestURI}" not exists</h1>
+	<h3 style="color: red;">${errorString}</h3>
 	You can proceed your work with other pages:
 	<br />
 	<a href="/PapersViewer/Index.jsp"> Index.jsp</a>

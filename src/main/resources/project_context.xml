@@ -17,27 +17,27 @@
 		</property>
 	</bean>
 
-	<bean id="Paper1" class="entity.Paper">
+	<bean id="Paper1" class="entity.Paper" scope="singleton">
 		<constructor-arg value="1"></constructor-arg>
 		<constructor-arg type="java.lang.String" value="Hello"></constructor-arg>
 	</bean>
 
-	<bean id="Paper2" class="entity.Paper">
+	<bean id="Paper2" class="entity.Paper" scope="singleton">
 		<constructor-arg value="2" ></constructor-arg>
 		<constructor-arg value="you" type="java.lang.String"></constructor-arg>
 	</bean>
 
-	<bean id="Paper3" class="entity.Paper">
+	<bean id="Paper3" class="entity.Paper" scope="singleton">
 		<constructor-arg value="3" ></constructor-arg>
 		<constructor-arg value="get" type="java.lang.String"></constructor-arg>
 	</bean>
 
-	<bean id="Paper4" class="entity.Paper">
+	<bean id="Paper4" class="entity.Paper" scope="singleton">
 		<constructor-arg value="4" ></constructor-arg>
 		<constructor-arg value="new" type="java.lang.String"></constructor-arg>
 	</bean>
 
-	<bean id="Paper5" class="entity.Paper">
+	<bean id="Paper5" class="entity.Paper" scope="singleton">
 		<constructor-arg value="5" ></constructor-arg>
 		<constructor-arg value="paper" type="java.lang.String"></constructor-arg>
 	</bean>

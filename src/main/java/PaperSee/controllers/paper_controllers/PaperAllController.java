@@ -6,19 +6,16 @@ import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
 
 
-public class PaperAllController extends HttpServlet {
+public class PaperAllController extends InjectAnnotationsPaperController {
 
 	/**
 	 * 
@@ -28,18 +25,15 @@ public class PaperAllController extends HttpServlet {
 	public static final String PAGE_OK = "/PaperAll.jsp";
 	public static final String PAGE_ERROR = "/404.jsp";
 	public static final String ATTRIBUTE_MODEL_TO_VIEW = "papers";
+	public static final String ATTRIBUTE_ERR = "errorString";
 
 	@Inject("paperDao")
-	private PaperDao paperDao;
-	public static String APP_CTX_PATH;
-	ApplicationContext context;
+	public PaperDao paperDao;
+
 
 	@Override
 	public void init() throws ServletException {
-		APP_CTX_PATH = getServletContext().getInitParameter("project_context");
-//		System.out.println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
-		context = new ClassPathXmlApplicationContext(APP_CTX_PATH);
-		paperDao = (PaperDao) context.getBean("paperDao");
+		super.init();
 	}
 
 	@Override
@@ -59,7 +53,9 @@ public class PaperAllController extends HttpServlet {
 					.include(req, resp);
 			return;
 		} catch (DaoException e) {
-			// System.err.println("PAPERS NOT FOUND!!!");
+			 System.err.println(">>>   PAPERS NOT FOUND!!!:" + e.getMessage());
+			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
+
 		}
  
 		// System.out.println(">>>  Redirect to :" + PAGE_ERROR);

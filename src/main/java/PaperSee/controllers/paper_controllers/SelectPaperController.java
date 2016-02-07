@@ -10,12 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.PaperDao;
 import dao.exceptions.DaoException;
@@ -23,8 +19,7 @@ import entity.Paper;
 import utility.ObjectBase64Coder;
 import utility.exception.ReadWriteCodeException;
 
-
-public class SelectPaperController extends HttpServlet {
+public class SelectPaperController extends InjectAnnotationsPaperController {
 
 	/**
 	 * 
@@ -39,16 +34,11 @@ public class SelectPaperController extends HttpServlet {
 	public static final String ATTR_USER_SELECTED_PAPER = COOKIE_NAME;
 
 	@Inject("paperDao")
-	private PaperDao paperDao;
-	public static String APP_CTX_PATH;
-	ApplicationContext context;
+	public PaperDao paperDao;
 
 	@Override
 	public void init() throws ServletException {
-		APP_CTX_PATH = getServletContext().getInitParameter("project_context");
-//		System.out.println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
-		context = new ClassPathXmlApplicationContext(APP_CTX_PATH);
-		paperDao = (PaperDao) context.getBean("paperDao");
+		super.init();
 	}
 
 	@Override
@@ -90,7 +80,7 @@ public class SelectPaperController extends HttpServlet {
 		try {
 			Paper paper = paperDao.selectById(id);
 			papers = getUserSelectedPaperSet(req, paper);
-			 System.out.println(">>>  Paper write in request:\n" + papers);
+			// System.out.println(">>>  Paper write in request:\n" + papers);
 
 			Cookie selected = writePapersInCookie(papers);
 			selected.setPath(req.getContextPath() + "/");

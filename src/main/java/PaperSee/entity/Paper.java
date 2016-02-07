@@ -62,7 +62,7 @@ public class Paper implements Externalizable {
 	 * @param name
 	 */
 	public Paper(int id, String name) {
-		 System.out.println(">>>  FULL PAPER CONSTRUCTOR");
+		// System.out.println(">>>  FULL PAPER CONSTRUCTOR");
 		this.id = id;
 		this.name = name;
 	}
@@ -71,12 +71,13 @@ public class Paper implements Externalizable {
 	 * empty constructor only to correct work serializable
 	 */
 	public Paper() {
-		 System.out.println(">>>  EMPTY PAPER CONSTRUCTOR");
+		// System.out.println(">>>  EMPTY PAPER CONSTRUCTOR");
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.write(getId());
+		out.writeObject(getName());
 
 	}
 
@@ -84,7 +85,7 @@ public class Paper implements Externalizable {
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
 		setId(in.read());
-
+		setName((String) in.readObject());
 	}
 
 }
