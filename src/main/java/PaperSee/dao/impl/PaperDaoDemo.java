@@ -12,6 +12,12 @@ public class PaperDaoDemo implements PaperDao {
 	private ConcurrentHashMap<Integer, Paper> papers;
 
 	public PaperDaoDemo() {
+//		papers = new ConcurrentHashMap<>();
+//		papers.put(1, new Paper(1,"1"));
+//		papers.put(2, new Paper(2,"2"));
+//		papers.put(3, new Paper(3,"3")); 
+//		papers.put(4, new Paper(4,"4"));
+//		papers.put(5, new Paper(5,"5"));
 	}
 
 	public ConcurrentHashMap<Integer, Paper> getPapers() {
