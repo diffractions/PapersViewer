@@ -4,7 +4,6 @@ import inject.Inject;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -17,6 +16,7 @@ import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
 import utility.ObjectBase64Coder;
+import utility.exception.PaperMarkedHashSet;
 import utility.exception.ReadWriteCodeException;
 
 public class SelectPaperController extends InjectAnnotationsPaperController {
@@ -142,8 +142,12 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 		} else {
 			// System.out.println(">>>  Paper from this request cookie:\n"
 			// + papers);
-			papers = new HashSet<Paper>(papers);
+			papers = new PaperMarkedHashSet<Paper>(papers);
+
+			// System.out.println("------------------------------------");
 			papers.add(paper);
+			// System.out.println(">>>  Papers sending in request cookie:\n"
+			// + papers);
 			papers = Collections.unmodifiableSet(papers);
 		}
 		req.getSession().setAttribute(ATTR_USER_SELECTED_PAPER, papers);

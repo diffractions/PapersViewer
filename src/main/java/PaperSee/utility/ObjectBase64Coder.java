@@ -59,11 +59,11 @@ public class ObjectBase64Coder<T extends Serializable> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Collection<? extends Serializable>> T readSetFromString(
-			String cookie) throws ReadWriteCodeException {
+			String setString) throws ReadWriteCodeException {
 		T papers = null;
 
 		try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(
-				Base64.getDecoder().decode(cookie));
+				Base64.getDecoder().decode(setString));
 				ObjectInputStream objectInputStream = new ObjectInputStream(
 						byteArrayInputStream);) {
 

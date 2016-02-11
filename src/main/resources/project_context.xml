@@ -1,49 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
-	 http://www.springframework.org/schema/beans/spring-beans-4.1.xsd 
-	 http://www.springframework.org/schema/aop 
-	 http://www.springframework.org/schema/aop/spring-aop.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
 
 
 
 	<bean id="paperDao" class="dao.impl.PaperDaoDemo" scope="singleton">
 		<property name="papers">
-			<map key-type="java.lang.Integer" value-type="entity.PaperModelInterface">
+			<map key-type="java.lang.Integer" value-type="entity.Paper">
 				<entry key="#{Paper1.id}" value-ref="Paper1" />
-				<entry key="2" value-ref="Paper2"></entry>
-				<entry key="3" value-ref="Paper3"></entry>
-				<entry key="4" value-ref="Paper4"></entry>
-				<entry key="5" value-ref="Paper5"></entry>
+				<entry key="#{Paper2.id}" value-ref="Paper2" />
+				<entry key="#{Paper3.id}" value-ref="Paper3" />
+				<entry key="#{Paper4.id}" value-ref="Paper4" />
+				<entry key="#{Paper5.id}" value-ref="Paper5" />
 			</map>
 		</property>
 	</bean>
-	<!-- #{Paper5.id} -->
 
-	<bean id="Paper1" class="entity.Paper" scope="singleton">
-		<constructor-arg value="#{number.incrementAndGet()}"></constructor-arg>
-		<constructor-arg type="java.lang.String" value="Hello"></constructor-arg>
+	<bean id="Paper1" class="entity.SimplePaper" scope="singleton">
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg type="java.lang.String" value="Hello" />
 	</bean>
 
-	<bean id="Paper2" class="entity.Paper" scope="singleton">
-		<constructor-arg value="#{number.incrementAndGet()}"></constructor-arg>
-		<constructor-arg value="you" type="java.lang.String"></constructor-arg>
+	<bean id="Paper2" class="entity.SimplePaper" scope="singleton">
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg value="you" type="java.lang.String" />
 	</bean>
 
-	<bean id="Paper3" class="entity.Paper" scope="singleton">
+	<bean id="Paper3" class="entity.SimplePaper" scope="singleton">
 		<constructor-arg value="#{number.incrementAndGet()}"></constructor-arg>
 		<constructor-arg value="get" type="java.lang.String"></constructor-arg>
 	</bean>
 
-	<bean id="Paper4" class="entity.Paper" scope="singleton">
-		<constructor-arg value="#{number.incrementAndGet()}"></constructor-arg>
-		<constructor-arg value="new" type="java.lang.String"></constructor-arg>
+	<bean id="Paper4" class="entity.SimplePaper" scope="singleton">
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg value="new" type="java.lang.String" />
 	</bean>
 
-	<bean id="Paper5" class="entity.Paper" scope="singleton">
-		<constructor-arg value="#{number.incrementAndGet()}"></constructor-arg>
-		<constructor-arg value="paper" type="java.lang.String"></constructor-arg>
+	<bean id="Paper5" class="entity.SimplePaper" scope="singleton">
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg value="paper" type="java.lang.String" />
 	</bean>
 
 	<bean id="number" class="java.util.concurrent.atomic.AtomicInteger"
@@ -53,11 +51,13 @@
 
 
 	<bean id="AOP-Exception-Print" class="aspect.AOPExceptionPrint"></bean>
-	<aop:aspectj-autoproxy />
-	<aop:config proxy-target-class="true" />
-	<aop:config>
+	<aop:aspectj-autoproxy proxy-target-class="true"
+		expose-proxy="true" />
+
+	<aop:config expose-proxy="true" proxy-target-class="true">
 		<aop:aspect id="exceptionPrint" ref="AOP-Exception-Print">
-			<aop:pointcut expression="execution(public * *(..))" id="printers" />
+			<aop:pointcut expression="execution(public * * (..)) )"
+				id="printers" />
 			<aop:after pointcut-ref="printers" method="printException" />
 		</aop:aspect>
 	</aop:config>

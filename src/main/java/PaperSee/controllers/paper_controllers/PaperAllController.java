@@ -10,9 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
+
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
+//import entity.SimplePaper;
 
 
 public class PaperAllController extends InjectAnnotationsPaperController {
@@ -46,6 +48,10 @@ public class PaperAllController extends InjectAnnotationsPaperController {
 			// + " to request attribute");
 
 			CopyOnWriteArraySet<Paper> model = paperDao.selectAll();
+
+			System.out.println("-----------------------------------------");
+			System.out.println(model);
+			System.out.println("-----------------------------------------");
 			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
 
 			// System.out.println(">>>  Redirect to :" + PAGE_OK);
