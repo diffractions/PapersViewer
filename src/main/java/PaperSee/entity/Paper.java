@@ -2,7 +2,7 @@ package entity;
 
 import java.io.Externalizable;
 
-public interface Paper  extends Externalizable {
+public interface Paper  extends Externalizable, Cloneable {
 
 	public int getId();
 
@@ -12,4 +12,5 @@ public interface Paper  extends Externalizable {
 
 	public void setName(String name);
 
+	public Object clone() throws CloneNotSupportedException ;
 }

@@ -4,6 +4,7 @@ import inject.Inject;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -16,7 +17,6 @@ import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
 import utility.ObjectBase64Coder;
-import utility.exception.PaperMarkedHashSet;
 import utility.exception.ReadWriteCodeException;
 
 public class SelectPaperController extends InjectAnnotationsPaperController {
@@ -79,8 +79,10 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 
 		try {
 			Paper paper = paperDao.selectById(id);
+//			 System.out.println("------------------------------------" + paper.hashCode());
+			 
 			papers = getUserSelectedPaperSet(req, paper);
-			// System.out.println(">>>  Paper write in request:\n" + papers);
+			 System.out.println(">>>  Paper write in request:\n" + papers);
 
 			Cookie selected = writePapersInCookie(papers);
 			selected.setPath(req.getContextPath() + "/");
@@ -103,7 +105,7 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 				ATTR_ACTIVE_USER_REQUEST_COUNT)).decrementAndGet() == 0) {
 			papers = null;
 			req.getSession().removeAttribute(ATTR_USER_SELECTED_PAPER);
-			// System.out.println("*******************************");
+			 System.out.println("*******************************");
 		}
 	}
 
@@ -142,9 +144,10 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 		} else {
 			// System.out.println(">>>  Paper from this request cookie:\n"
 			// + papers);
-			papers = new PaperMarkedHashSet<Paper>(papers);
+			papers = new HashSet<Paper>(papers);
 
-			// System.out.println("------------------------------------");
+//			 System.out.println("------------------------------------" + paper.hashCode());
+			
 			papers.add(paper);
 			// System.out.println(">>>  Papers sending in request cookie:\n"
 			// + papers);

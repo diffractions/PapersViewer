@@ -36,6 +36,7 @@ public class PaperAllController extends InjectAnnotationsPaperController {
 	@Override
 	public void init() throws ServletException {
 		super.init();
+		
 	}
 
 	@Override

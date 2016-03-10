@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
+
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
@@ -33,6 +34,7 @@ public class PaperController extends InjectAnnotationsPaperController {
 	@Override
 	public void init() throws ServletException {
 		super.init();
+		
 	}
 
 	@Override

@@ -11,14 +11,17 @@ public class SimplePaper implements Paper {
 		int result = 1;
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-//		System.out.println("IN HASH CODE: " + result);
+		// System.out.println("IN HASH CODE: " + result);
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 
-//		System.out.println("IN EQUALS: ");
+		// System.out.println("IN EQUALS: ");
+		// System.out.println(">>>  this : " + this);
+		// System.out.println(">>>  obj  : " +obj);
+
 		if (this == obj) {
 			return true;
 		}
@@ -48,7 +51,7 @@ public class SimplePaper implements Paper {
 			return false;
 		}
 
-//		System.out.println("TRUE");
+		// System.out.println("TRUE");
 		return true;
 	}
 
@@ -112,4 +115,8 @@ public class SimplePaper implements Paper {
 		setName((String) in.readObject());
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
 }
