@@ -19,7 +19,7 @@ import entity.Paper;
 import utility.ObjectBase64Coder;
 import utility.exception.ReadWriteCodeException;
 
-public class SelectPaperController extends InjectAnnotationsPaperController {
+public class SelectPaperController extends DependencyInjectionServlet {
 
 	/**
 	 * 
@@ -46,6 +46,11 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 			throws ServletException, IOException {
 
 		try {
+
+			if (paperDao == null) {
+				throw new DaoException("Papers DAO not found");
+			}
+
 			int id = Integer.parseInt(req.getParameter(PARAM_ID));
 
 			// System.out.println("______________________________________\n"
@@ -78,16 +83,10 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 		Set<Paper> papers = null;
 
 		try {
+
 			Paper paper = paperDao.selectById(id);
-//			 System.out.println("------------------------------------" + paper.hashCode());
-			 
 			papers = getUserSelectedPaperSet(req, paper);
-			 System.out.println(">>>  Paper write in request:\n" + papers);
-
-			Cookie selected = writePapersInCookie(papers);
-			selected.setPath(req.getContextPath() + "/");
-
-			resp.addCookie(selected);
+			writePaperInCookie(req, resp, papers);
 
 		} catch (DaoException | NullPointerException | ReadWriteCodeException e) {
 			throw e;
@@ -98,6 +97,15 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 
 	}
 
+	private void writePaperInCookie(HttpServletRequest req,
+			HttpServletResponse resp, Set<Paper> papers)
+			throws ReadWriteCodeException {
+		System.out.println(">>>  Paper write in cookie:\n" + papers);
+		Cookie selected = writePapersInCookie(papers);
+		selected.setPath(req.getContextPath() + "/");
+		resp.addCookie(selected);
+	}
+
 	private void decrementCountOfActiveRequest(Set<Paper> papers,
 			HttpServletRequest req) {
 
@@ -105,7 +113,7 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 				ATTR_ACTIVE_USER_REQUEST_COUNT)).decrementAndGet() == 0) {
 			papers = null;
 			req.getSession().removeAttribute(ATTR_USER_SELECTED_PAPER);
-			 System.out.println("*******************************");
+			System.out.println("*******************************");
 		}
 	}
 
@@ -146,8 +154,9 @@ public class SelectPaperController extends InjectAnnotationsPaperController {
 			// + papers);
 			papers = new HashSet<Paper>(papers);
 
-//			 System.out.println("------------------------------------" + paper.hashCode());
-			
+			// System.out.println("------------------------------------" +
+			// paper.hashCode());
+
 			papers.add(paper);
 			// System.out.println(">>>  Papers sending in request cookie:\n"
 			// + papers);

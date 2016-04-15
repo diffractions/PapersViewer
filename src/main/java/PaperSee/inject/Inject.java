@@ -18,6 +18,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Inject {
-	public String value();
-	public int age() default 25;
+	public String value() ;
+//	public int age() default 25;
 }

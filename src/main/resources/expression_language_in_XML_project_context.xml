@@ -3,40 +3,48 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+
 	<bean id="paperDao" class="dao.impl.PaperDaoDemo" scope="singleton">
 		<property name="papers">
 			<map key-type="java.lang.Integer" value-type="entity.Paper">
-				<entry key="1" value-ref="Paper1" />
-				<entry key="2" value-ref="Paper2" />
-				<entry key="3" value-ref="Paper3" />
-				<entry key="4" value-ref="Paper4" />
-				<entry key="5" value-ref="Paper5" />
+				<entry key="#{Paper1.id}" value-ref="Paper1" />
+				<entry key="#{Paper2.id}" value-ref="Paper2" />
+				<entry key="#{Paper3.id}" value-ref="Paper3" />
+				<entry key="#{Paper4.id}" value-ref="Paper4" />
+				<entry key="#{Paper5.id}" value-ref="Paper5" />
 			</map>
 		</property>
 	</bean>
 
 	<bean id="Paper1" class="entity.SimplePaper" scope="singleton">
-		<constructor-arg value="1" />
-		<constructor-arg type="java.lang.String" value="Get" />
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg type="java.lang.String" value="Show" />
 	</bean>
 
 	<bean id="Paper2" class="entity.SimplePaper" scope="singleton">
-		<constructor-arg value="2" />
+		<constructor-arg value="#{number.incrementAndGet()}" />
 		<constructor-arg value="papers" type="java.lang.String" />
 	</bean>
 
 	<bean id="Paper3" class="entity.SimplePaper" scope="singleton">
-		<constructor-arg value="3"></constructor-arg>
+		<constructor-arg value="#{number.incrementAndGet()}"></constructor-arg>
 		<constructor-arg value="from" type="java.lang.String"></constructor-arg>
 	</bean>
 
 	<bean id="Paper4" class="entity.SimplePaper" scope="singleton">
-		<constructor-arg value="4" />
-		<constructor-arg value="project" type="java.lang.String" />
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg value="Expression" type="java.lang.String" />
 	</bean>
 
 	<bean id="Paper5" class="entity.SimplePaper" scope="singleton">
-		<constructor-arg value="5" />
-		<constructor-arg value="context" type="java.lang.String" />
+		<constructor-arg value="#{number.incrementAndGet()}" />
+		<constructor-arg value="language" type="java.lang.String" />
 	</bean>
+
+	<bean id="number" class="java.util.concurrent.atomic.AtomicInteger"
+		scope="singleton">
+		<constructor-arg value="0" />
+	</bean>
+
+
 </beans>

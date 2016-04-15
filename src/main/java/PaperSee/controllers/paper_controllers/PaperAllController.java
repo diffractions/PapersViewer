@@ -9,15 +9,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
-
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
+
 //import entity.SimplePaper;
 
-
-public class PaperAllController extends InjectAnnotationsPaperController {
+public class PaperAllController extends DependencyInjectionServlet {
 
 	/**
 	 * 
@@ -32,11 +30,9 @@ public class PaperAllController extends InjectAnnotationsPaperController {
 	@Inject("paperDao")
 	public PaperDao paperDao;
 
-
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		
 	}
 
 	@Override
@@ -48,11 +44,11 @@ public class PaperAllController extends InjectAnnotationsPaperController {
 			// + ">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
 			// + " to request attribute");
 
+			if (paperDao == null) {
+				throw new DaoException("Papers DAO not found");
+			}
 			CopyOnWriteArraySet<Paper> model = paperDao.selectAll();
-
-			System.out.println("-----------------------------------------");
-			System.out.println(model);
-			System.out.println("-----------------------------------------");
+			 System.out.println(">>>  ALL_PAPERS:" + model);
 			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
 
 			// System.out.println(">>>  Redirect to :" + PAGE_OK);
@@ -60,11 +56,12 @@ public class PaperAllController extends InjectAnnotationsPaperController {
 					.include(req, resp);
 			return;
 		} catch (DaoException e) {
-			 System.err.println(">>>   PAPERS NOT FOUND!!!:" + e.getMessage());
+			System.err.println(">>>   Data Access Object exception caused by:"
+					+ e.getMessage());
 			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
 
 		}
- 
+
 		// System.out.println(">>>  Redirect to :" + PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}

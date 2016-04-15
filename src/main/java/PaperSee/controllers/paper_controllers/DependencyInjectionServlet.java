@@ -5,6 +5,7 @@ import java.util.List;
 
 import inject.FieldReflector;
 import inject.Inject;
+import inject.exeptions.InjectInitialException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -17,7 +18,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 /**
  * Servlet implementation class InjectAnnotationsPaperController
  */
-public class InjectAnnotationsPaperController extends HttpServlet {
+public class DependencyInjectionServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String APP_CTX_PATH = "project_context";
@@ -28,18 +29,23 @@ public class InjectAnnotationsPaperController extends HttpServlet {
 	 */
 	@Override
 	public void init() throws ServletException {
+		
+		
+		
 		String path = getServletContext().getInitParameter(APP_CTX_PATH);
+
 		if (path == null) {
 			throw new ServletException(APP_CTX_PATH + "init param==null");
 		}
-
 		// System.out.println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
+
 		if (context == null)
 			context = new ClassPathXmlApplicationContext(path);
+
 		try {
 
 			List<Field> allFields = FieldReflector.collectUpTo(this.getClass(),
-					InjectAnnotationsPaperController.class);
+					DependencyInjectionServlet.class);
 			List<Field> markedFields = (List<Field>) FieldReflector
 					.filterInject(allFields);
 
@@ -47,28 +53,37 @@ public class InjectAnnotationsPaperController extends HttpServlet {
 				field.setAccessible(true);
 				String beanName = null;
 				Object bean = null;
-				
+
 				try {
 					beanName = field.getAnnotation(Inject.class).value();
 					bean = context.getBean(beanName);
-				} catch (Exception e) {
-					ServletException ex = new ServletException();
-					ex.addSuppressed(e);
-					throw ex;
-				}
 
-				if (bean == null) {
-					throw new ServletException("There are not bean with name "
-							+ beanName);
+					if (!(field.getType().isAssignableFrom(bean.getClass()))) {
+						throw new InjectInitialException(
+								"In Spring been configuration file: \"" + path
+										+ "\" not found bean with name: \" "
+										+ beanName + "\" , and type: \" "
+										+ field.getGenericType() + "\".");
+					}
+
+				} catch (NullPointerException | BeansException e) {
+					throw new InjectInitialException(
+							"Cannot assign a value for a bean, since: "
+									+ e.getLocalizedMessage() + "!", e);
 				}
 
 				field.set(this, bean);
 			}
+			
 
-		} catch (SecurityException | BeansException | IllegalArgumentException
+		} catch (SecurityException | IllegalArgumentException
 				| IllegalAccessException e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+		} catch (InjectInitialException e) {
+//			e.printStackTrace();
 		}
-	}
 
+		System.out.println(">>> INIT OK, in " + this.getClass().getSimpleName()
+				+ " <<<");
+	}
 }

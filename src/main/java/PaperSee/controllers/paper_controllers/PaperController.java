@@ -16,7 +16,7 @@ import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
 
-public class PaperController extends InjectAnnotationsPaperController {
+public class PaperController extends DependencyInjectionServlet {
 	/**
 	 * 
 	 */
@@ -41,7 +41,14 @@ public class PaperController extends InjectAnnotationsPaperController {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
+		
+		
 		try {
+			
+			if(paperDao == null){
+				throw new DaoException("Papers DAO not found");
+			}
+			
 			// System.out.println("______________________________________\n"
 			// + ">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
 			// + " to request attribute");
