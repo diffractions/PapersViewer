@@ -11,10 +11,10 @@ public class PaperProxy {
 
 	public Object proxy(ProceedingJoinPoint call) throws Throwable {
 		try{
-		System.out.println("Aspect.PROXY.IN");
+		System.out.println("ASPECT.PROXY.IN");
 		if (call.getArgs().length > 0
 				&& paperProxyMap.containsKey(call.getArgs()[0])) {
-			System.out.println("Aspect.ProxyMap" + paperProxyMap);
+			System.out.println("ASPECT.ProxyMap" + paperProxyMap);
 			
 			return paperProxyMap.get(call.getArgs()[0]);
 
@@ -26,7 +26,7 @@ public class PaperProxy {
 		}
 		return returned;
 		}finally{
-			System.out.println("Aspect.PROXY.OUT");
+			System.out.println("ASPECT.PROXY.OUT");
 		}
 	}
 }

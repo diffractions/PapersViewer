@@ -23,8 +23,7 @@ public class WorkTimeAndSessionCreateFilter extends BaseHTTPFilter {
 		long OUT = System.nanoTime();
 		int time = (int) TimeUnit.MILLISECONDS.convert((OUT - IN),
 				TimeUnit.NANOSECONDS);
-		System.out.println("--------------Time information-------------\n"
-				+ "Time to create response in server: " + time + " ms");
+		System.out.println("FILTER.TIME:Time to create response in server: " + time + " ms");
 
 		addTime(arg0, session, time);
 //		System.out.println("==================================="

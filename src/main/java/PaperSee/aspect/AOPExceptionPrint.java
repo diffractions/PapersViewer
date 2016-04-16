@@ -7,7 +7,7 @@ import org.aspectj.lang.JoinPoint;
 public class AOPExceptionPrint {
 
 	public void printException(JoinPoint joinPoint, Throwable throwable) {
-		System.out.println("Aspect.ERR: " + throwable.getMessage());
+		System.out.println("ASPECT.ERR: " + throwable.getMessage());
 //		System.out
 //				.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
 //						+ throwable.getMessage()

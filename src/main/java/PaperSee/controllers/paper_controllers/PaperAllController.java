@@ -48,7 +48,7 @@ public class PaperAllController extends DependencyInjectionServlet {
 				throw new DaoException("Papers DAO not found");
 			}
 			CopyOnWriteArraySet<Paper> model = paperDao.selectAll();
-			 System.out.println(">>>  ALL_PAPERS:" + model);
+			// System.out.println(">>>  ALL_PAPERS:" + model);
 			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
 
 			// System.out.println(">>>  Redirect to :" + PAGE_OK);

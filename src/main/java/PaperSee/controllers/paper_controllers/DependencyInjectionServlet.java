@@ -29,9 +29,7 @@ public class DependencyInjectionServlet extends HttpServlet {
 	 */
 	@Override
 	public void init() throws ServletException {
-		
-		
-		
+
 		String path = getServletContext().getInitParameter(APP_CTX_PATH);
 
 		if (path == null) {
@@ -74,16 +72,16 @@ public class DependencyInjectionServlet extends HttpServlet {
 
 				field.set(this, bean);
 			}
-			
 
 		} catch (SecurityException | IllegalArgumentException
 				| IllegalAccessException e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (InjectInitialException e) {
-//			e.printStackTrace();
+			// e.printStackTrace();
 		}
 
-		System.out.println(">>> INIT OK, in " + this.getClass().getSimpleName()
-				+ " <<<");
+		System.out.println("PAPERS_CONTROLLERS.INIT.OK:" + this.getClass().getSimpleName());
+
 	}
+
 }

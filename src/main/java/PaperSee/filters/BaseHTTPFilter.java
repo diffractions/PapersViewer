@@ -22,26 +22,26 @@ abstract public class BaseHTTPFilter implements Filter {
 	public FilterConfig getFilterConfig() {
 		return config;
 	}
-	
+
 	@Override
 	public void destroy() {
-		System.out.println(">> FILTER DESTROY: "
-				+ this.getClass().getSimpleName() + ";");
+		System.out.println("FILTER.DESTROY: " + this.getClass().getSimpleName()
+				+ ";");
 
 	}
 
 	@Override
 	public void doFilter(ServletRequest arg0, ServletResponse arg1,
 			FilterChain arg2) throws IOException, ServletException {
-		
+
 		if (arg0 instanceof HttpServletRequest
 				&& arg1 instanceof HttpServletResponse) {
-			
+
 			doFilter((HttpServletRequest) arg0, (HttpServletResponse) arg1,
 					arg2);
 
 		} else {
-			
+
 			arg2.doFilter(arg0, arg1);
 
 		}
@@ -53,7 +53,7 @@ abstract public class BaseHTTPFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		System.out.println(">> FILTER INIT: " + this.getClass().getSimpleName()
+		System.out.println("FILTER.INIT: " + this.getClass().getSimpleName()
 				+ ";");
 		setFilterConfig(arg0);
 
@@ -63,10 +63,8 @@ abstract public class BaseHTTPFilter implements Filter {
 	 * 
 	 */
 	public BaseHTTPFilter() {
-		System.out.println(">> " + this.getClass().getSimpleName()
-				+ " start;");
+		System.out.println("FILTER.START: " + this.getClass().getSimpleName()
+				+ ";");
 	}
-	
-	
 
 }
