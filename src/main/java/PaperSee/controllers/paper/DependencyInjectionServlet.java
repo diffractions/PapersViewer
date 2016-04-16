@@ -1,4 +1,4 @@
-package controllers.paper_controllers;
+package controllers.paper;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -23,6 +23,7 @@ public class DependencyInjectionServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String APP_CTX_PATH = "project_context";
 	private static ApplicationContext context;
+	private String status = "OK";
 
 	/**
 	 * @see Servlet#init(ServletConfig)
@@ -31,16 +32,14 @@ public class DependencyInjectionServlet extends HttpServlet {
 	public void init() throws ServletException {
 
 		String path = getServletContext().getInitParameter(APP_CTX_PATH);
-
 		if (path == null) {
 			throw new ServletException(APP_CTX_PATH + "init param==null");
 		}
 		// System.out.println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
 
-		if (context == null)
-			context = new ClassPathXmlApplicationContext(path);
-
 		try {
+			if (context == null)
+				context = new ClassPathXmlApplicationContext(path);
 
 			List<Field> allFields = FieldReflector.collectUpTo(this.getClass(),
 					DependencyInjectionServlet.class);
@@ -73,15 +72,14 @@ public class DependencyInjectionServlet extends HttpServlet {
 				field.set(this, bean);
 			}
 
-		} catch (SecurityException | IllegalArgumentException
-				| IllegalAccessException e) {
-			// e.printStackTrace();
-		} catch (InjectInitialException e) {
+		} catch (BeansException | SecurityException | IllegalArgumentException
+				| IllegalAccessException | InjectInitialException e) {
+			status = "EXCEPTION";
 			// e.printStackTrace();
 		}
 
-		System.out.println("PAPERS_CONTROLLERS.INIT.OK:" + this.getClass().getSimpleName());
+		System.out.println("CONTROLLERS.PAPER.DIS.INIT:" + status + "."
+				+ this.getClass().getSimpleName());
 
 	}
-
 }

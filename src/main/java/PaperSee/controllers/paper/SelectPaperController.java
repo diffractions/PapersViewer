@@ -1,4 +1,4 @@
-package controllers.paper_controllers;
+package controllers.paper;
 
 import inject.Inject;
 
@@ -100,7 +100,8 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	private void writePaperInCookie(HttpServletRequest req,
 			HttpServletResponse resp, Set<Paper> papers)
 			throws ReadWriteCodeException {
-		System.out.println(">>>  Paper write in cookie:\n" + papers);
+		System.out.println("CONTROLLERS.PAPER.SPC.writePaperInCookie:"
+				+ papers);
 		Cookie selected = writePapersInCookie(papers);
 		selected.setPath(req.getContextPath() + "/");
 		resp.addCookie(selected);
@@ -113,7 +114,7 @@ public class SelectPaperController extends DependencyInjectionServlet {
 				ATTR_ACTIVE_USER_REQUEST_COUNT)).decrementAndGet() == 0) {
 			papers = null;
 			req.getSession().removeAttribute(ATTR_USER_SELECTED_PAPER);
-			System.out.println("*******************************");
+//			System.out.println("*******************************");
 		}
 	}
 

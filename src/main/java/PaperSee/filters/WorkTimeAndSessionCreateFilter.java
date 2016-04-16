@@ -23,11 +23,11 @@ public class WorkTimeAndSessionCreateFilter extends BaseHTTPFilter {
 		long OUT = System.nanoTime();
 		int time = (int) TimeUnit.MILLISECONDS.convert((OUT - IN),
 				TimeUnit.NANOSECONDS);
-		System.out.println("FILTER.TIME:Time to create response in server: " + time + " ms");
+		System.out
+				.printf("FILTER.TIME:Time to create response in server: %3d ms; request uri: %s \n",
+						time, arg0.getRequestURI());
 
 		addTime(arg0, session, time);
-//		System.out.println("==================================="
-//				+ "============================================");
 
 	}
 
@@ -37,9 +37,9 @@ public class WorkTimeAndSessionCreateFilter extends BaseHTTPFilter {
 		if (session.isNew()) {
 			session.setMaxInactiveInterval(60);
 			session.setAttribute("first Request URI", arg0.getRequestURI());
-		} /*else {
-			arg0.changeSessionId();
-		}*/
+		} /*
+		 * else { arg0.changeSessionId(); }
+		 */
 		return session;
 	}
 

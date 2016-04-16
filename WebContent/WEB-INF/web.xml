@@ -62,7 +62,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>Selected</servlet-name>
-		<servlet-class>controllers.paper_controllers.SelectPaperController</servlet-class>
+		<servlet-class>controllers.paper.SelectPaperController</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Selected</servlet-name>
@@ -70,7 +70,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>Papers</servlet-name>
-		<servlet-class>controllers.paper_controllers.PaperAllController</servlet-class>
+		<servlet-class>controllers.paper.PaperAllController</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Papers</servlet-name>
@@ -78,7 +78,7 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>Paper</servlet-name>
-		<servlet-class>controllers.paper_controllers.PaperController</servlet-class>
+		<servlet-class>controllers.paper.PaperController</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Paper</servlet-name>
