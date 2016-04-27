@@ -45,7 +45,7 @@ public class CountClickFilter extends BaseHTTPFilter {
 //				+ ">>>  Count filter information");
 
 		if ((session = (HttpSession) arg0.getSession(false)) != null) {
-
+			session.setMaxInactiveInterval(30);
 			sessionStoryMap = getSessionStoryMap(session);
 			loadTime = getSessionLoadTime(session);
 			count = addPathToSessionStory(sessionStoryMap, uri);

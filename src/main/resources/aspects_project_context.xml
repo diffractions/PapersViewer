@@ -10,11 +10,8 @@
 	<!-- <import resource="simple_project_context.xml" /> -->
 	<!-- <import resource="expression_language_in_XML_project_context.xml" /> -->
 	<!-- <import resource="project_context.xml" /> -->
-
-	<import resource="JDBC_project_context.xml" />
-
-
-
+	<!-- <import resource="simple_JDBC_project_context.xml" /> -->
+	<import resource="transaction_project_context.xml" />
 
 
 	<bean id="AOP-Exception-Print" class="aspect.AOPExceptionPrint"></bean>

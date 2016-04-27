@@ -3,7 +3,15 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="paperDao" class="dao.impl.PaperDaoJDBCImplementation"
-		scope="singleton"></bean>
-	
+
+	<bean id="txManager" class="transaction.TransactionManagerImpl"
+		scope="singleton" init-method="registrDriver">
+	</bean>
+
+	<bean id="paperDao" class="dao.impl.PaperDaoJDBCTransactionImplementation"
+		scope="singleton">
+		<property name="dataSource" ref="txManager" />
+	</bean>
+
+
 </beans>

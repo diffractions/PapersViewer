@@ -4,17 +4,22 @@ package aspect;
 
 import org.aspectj.lang.JoinPoint;
 
+import static utility.LogPrinter.*;
+
 public class AOPExceptionPrint {
 
 	public void printException(JoinPoint joinPoint, Throwable throwable) {
-		System.out.println("ASPECT.ERR: " + throwable.getMessage());
-//		System.out
-//				.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
-//						+ throwable.getMessage()
-//						+ "\n-----------------------------Stack trace----------------------------------");
-//		Arrays.asList(throwable.getStackTrace()).forEach(System.err::println);
-//		System.out
-//				.println("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+		 println("ERR: " + throwable.getMessage()
+				+ "; Laast StackTraceElement is in : class - "
+				+ throwable.getStackTrace()[0].getClassName() + ", method - "
+				+ throwable.getStackTrace()[0].getMethodName() + ", line - "
+				+ throwable.getStackTrace()[0].getLineNumber());
+//		  println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n"
+//		 + throwable.getMessage()
+//		 +
+//		 "\n-----------------------------Stack trace----------------------------------");
+//		 Arrays.asList(throwable.getStackTrace()).forEach(System.err::println);
+//		 println("\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
 	}
 
 }

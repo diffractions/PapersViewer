@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
@@ -16,8 +17,11 @@ import javax.servlet.http.HttpServletResponse;
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
+import transaction.TransactionManager;
+import transaction.exception.TransactionException;
 import utility.ObjectBase64Coder;
 import utility.exception.ReadWriteCodeException;
+import static utility.LogPrinter.*;
 
 public class SelectPaperController extends DependencyInjectionServlet {
 
@@ -36,6 +40,9 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	@Inject("paperDao")
 	public PaperDao paperDao;
 
+	@Inject("txManager")
+	public TransactionManager txManager;
+
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -51,18 +58,34 @@ public class SelectPaperController extends DependencyInjectionServlet {
 				throw new DaoException("Papers DAO not found");
 			}
 
-			int id = Integer.parseInt(req.getParameter(PARAM_ID));
+			if (txManager == null) {
+				throw new TransactionException("???????????");
+			} else {
+				Callable<Integer> returned = new Callable<Integer>() {
+					@Override
+					public Integer call() throws Exception {
+						int id = Integer.parseInt(req.getParameter(PARAM_ID));
 
-			// System.out.println("______________________________________\n"
-			// + ">>>  ADD SELECTED STORY COOKIE");
-			addPaperInStory(req, resp, id);
+						// System.out.println("______________________________________\n"
+						// + ">>>  ADD SELECTED STORY COOKIE");
+						addPaperInStory(req, resp, id);
 
-			// System.out.println(">>>  Redirect to :" + PAGE_OK);
-			resp.sendRedirect(PAGE_OK + "?" + PARAM_ID + "=" + id);
+						return id;
+					}
+				};
+
+				int id = txManager.doInTransaction(returned);
+
+				// System.out.println(">>>  Redirect to :" + PAGE_OK);
+				resp.sendRedirect(PAGE_OK + "?" + PARAM_ID + "=" + id);
+			}
+
 			return;
 
-		} catch (DaoException | NumberFormatException | NullPointerException
-				| ReadWriteCodeException e) {
+		} catch (/*
+				 * DaoException | NumberFormatException | NullPointerException |
+				 * ReadWriteCodeException |
+				 */Exception e) {
 			// NOP
 		}
 
@@ -100,8 +123,7 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	private void writePaperInCookie(HttpServletRequest req,
 			HttpServletResponse resp, Set<Paper> papers)
 			throws ReadWriteCodeException {
-		System.out.println("CONTROLLERS.PAPER.SPC.writePaperInCookie:"
-				+ papers);
+		println("writePaperInCookie:" + papers);
 		Cookie selected = writePapersInCookie(papers);
 		selected.setPath(req.getContextPath() + "/");
 		resp.addCookie(selected);
@@ -114,7 +136,7 @@ public class SelectPaperController extends DependencyInjectionServlet {
 				ATTR_ACTIVE_USER_REQUEST_COUNT)).decrementAndGet() == 0) {
 			papers = null;
 			req.getSession().removeAttribute(ATTR_USER_SELECTED_PAPER);
-//			System.out.println("*******************************");
+			// System.out.println("*******************************");
 		}
 	}
 

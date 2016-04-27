@@ -15,6 +15,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import static utility.LogPrinter.*;
+
 /**
  * Servlet implementation class InjectAnnotationsPaperController
  */
@@ -75,11 +77,11 @@ public class DependencyInjectionServlet extends HttpServlet {
 		} catch (BeansException | SecurityException | IllegalArgumentException
 				| IllegalAccessException | InjectInitialException e) {
 			status = "EXCEPTION";
-			// e.printStackTrace();
 		}
 
-		System.out.println("CONTROLLERS.PAPER.DIS.INIT:" + status + "."
+		 println( status + "."
 				+ this.getClass().getSimpleName());
 
 	}
+
 }

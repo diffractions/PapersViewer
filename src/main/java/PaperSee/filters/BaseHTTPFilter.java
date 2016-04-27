@@ -10,6 +10,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import static utility.LogPrinter.*;
 
 abstract public class BaseHTTPFilter implements Filter {
 
@@ -25,8 +26,7 @@ abstract public class BaseHTTPFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		System.out.println("FILTER.DESTROY: " + this.getClass().getSimpleName()
-				+ ";");
+		println("DESTROY: " + this.getClass().getSimpleName() );
 
 	}
 
@@ -53,8 +53,7 @@ abstract public class BaseHTTPFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		System.out.println("FILTER.INIT: " + this.getClass().getSimpleName()
-				+ ";");
+		println("INIT: " + this.getClass().getSimpleName() );
 		setFilterConfig(arg0);
 
 	}
@@ -63,8 +62,7 @@ abstract public class BaseHTTPFilter implements Filter {
 	 * 
 	 */
 	public BaseHTTPFilter() {
-		System.out.println("FILTER.START: " + this.getClass().getSimpleName()
-				+ ";");
+		println("START: " + this.getClass().getSimpleName() );
 	}
 
 }
