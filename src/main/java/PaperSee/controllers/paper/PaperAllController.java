@@ -55,7 +55,7 @@ public class PaperAllController extends DependencyInjectionServlet {
 			}
 
 			if (txManager == null) {
-				throw new TransactionException("?????????????????????");
+				throw new TransactionException("Transaction field is empty");
 			} else {
 				Callable<CopyOnWriteArraySet<Paper>> returned = new Callable<CopyOnWriteArraySet<Paper>>() {
 					@Override
@@ -69,6 +69,7 @@ public class PaperAllController extends DependencyInjectionServlet {
 						.doInTransaction(returned);
 				// System.out.println(">>>  ALL_PAPERS:" + model);
 				req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
+
 				// System.out.println(">>>  Redirect to :" + PAGE_OK);
 				getServletContext().getRequestDispatcher(PAGE_OK).include(req,
 						resp);
@@ -76,14 +77,6 @@ public class PaperAllController extends DependencyInjectionServlet {
 
 			}
 
-			// CopyOnWriteArraySet<Paper> model = paperDao.selectAll();
-			// System.out.println(">>>  ALL_PAPERS:" + model);
-			// req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
-			//
-			// System.out.println(">>>  Redirect to :" + PAGE_OK);
-			// getServletContext().getRequestDispatcher(PAGE_OK)
-			// .include(req, resp);
-			// return;
 		} catch (/* DaoException | TransactionException | */Exception e) {
 
 			System.out

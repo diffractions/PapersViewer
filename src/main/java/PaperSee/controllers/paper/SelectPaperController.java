@@ -59,7 +59,7 @@ public class SelectPaperController extends DependencyInjectionServlet {
 			}
 
 			if (txManager == null) {
-				throw new TransactionException("???????????");
+				throw new TransactionException("Transaction field is empty");
 			} else {
 				Callable<Integer> returned = new Callable<Integer>() {
 					@Override

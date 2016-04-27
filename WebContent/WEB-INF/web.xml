@@ -14,10 +14,10 @@
 	<context-param>
 		<param-name>project_context</param-name>
 		<!-- <param-value>/expression_language_in_XML_project_context.xml</param-value> -->
-		<!-- <param-value>/aspects_project_context.xml</param-value> -->
+		<param-value>/aspects_project_context.xml</param-value>
 		<!-- <param-value>/project_context.xml</param-value> -->
 		<!-- <param-value>/simple_project_context.xml</param-value> -->
-		<param-value>/transaction_project_context.xml</param-value>
+<!-- 		<param-value>/transaction_project_context.xml</param-value> -->
 
 	</context-param>
 	<servlet>
