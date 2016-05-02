@@ -41,8 +41,7 @@ public class CountClickFilter extends BaseHTTPFilter {
 		String uri = arg0.getRequestURI();
 		HttpSession session;
 
-//		System.out.println("______________________________________\n"
-//				+ ">>>  Count filter information");
+		// println( ">>>  Count filter information");
 
 		if ((session = (HttpSession) arg0.getSession(false)) != null) {
 			session.setMaxInactiveInterval(30);
@@ -60,10 +59,10 @@ public class CountClickFilter extends BaseHTTPFilter {
 			ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>> loadTime,
 			String uri) {
 		if (loadTime.get(uri) == null) {
-//			System.out.println(">>>  Add new path to Load Time");
+			// println(">>>  Add new path to Load Time");
 			loadTime.put(uri, new CopyOnWriteArrayList<Integer>());
-//		} else {
-//			System.out.println(">>>  Path was found in Load Time");
+			// } else {
+			// println(">>>  Path was found in Load Time");
 		}
 	}
 
@@ -71,10 +70,10 @@ public class CountClickFilter extends BaseHTTPFilter {
 			ConcurrentHashMap<String, Integer> sessionStoryMap, String uri) {
 		int count;
 		if (sessionStoryMap.get(uri) != null) {
-//			System.out.println(">>>  Path was found in session story");
+			// println(">>>  Path was found in session story");
 			count = sessionStoryMap.get(uri);
 		} else {
-//			System.out.println(">>>  Add new path to session story");
+			// println(">>>  Add new path to session story");
 			count = 0;
 		}
 		return count;
@@ -85,11 +84,11 @@ public class CountClickFilter extends BaseHTTPFilter {
 			HttpSession session) {
 		ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>> LoadTime;
 		if (session.getAttribute("LoadTime") != null) {
-//			System.out.println(">>>  Session Load Time map was called");
+			// println(">>>  Session Load Time map was called");
 			LoadTime = ((ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>>) session
 					.getAttribute("LoadTime"));
 		} else {
-//			System.out.println(">>>  Session Load Time map was created");
+			// println(">>>  Session Load Time map was created");
 			LoadTime = new ConcurrentHashMap<>();
 			session.setAttribute("LoadTime", LoadTime);
 		}
@@ -101,11 +100,11 @@ public class CountClickFilter extends BaseHTTPFilter {
 			HttpSession session) {
 		ConcurrentHashMap<String, Integer> map;
 		if (session.getAttribute("map") != null) {
-//			System.out.println(">>>  Session story map was called");
+			// println(">>>  Session story map was called");
 			map = ((ConcurrentHashMap<String, Integer>) session
 					.getAttribute("map"));
 		} else {
-//			System.out.println(">>>  Session story map was created");
+			// println(">>>  Session story map was created");
 			map = new ConcurrentHashMap<>();
 			session.setAttribute("map", map);
 		}

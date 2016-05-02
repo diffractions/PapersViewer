@@ -10,7 +10,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,15 +18,13 @@ import dao.exceptions.DaoException;
 import entity.Paper;
 import transaction.TransactionManager;
 import transaction.exception.TransactionException;
-import utility.ObjectBase64Coder;
 import utility.exception.ReadWriteCodeException;
-import static utility.LogPrinter.*;
+import static utility.LogPrinter.println;
+import static utility.CookiePaperSetUtil.getPapersFromCookie;
+import static utility.CookiePaperSetUtil.writePapersInCookie;
 
 public class SelectPaperController extends DependencyInjectionServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public static final String PAGE_OK = "get.do";
@@ -58,38 +55,39 @@ public class SelectPaperController extends DependencyInjectionServlet {
 				throw new DaoException("Papers DAO not found");
 			}
 
+			int id = Integer.parseInt(req.getParameter(PARAM_ID));
+			Paper paper;
+
 			if (txManager == null) {
-				throw new TransactionException("Transaction field is empty");
+				println("Transaction field is empty");
+				paper = paperDao.selectById(id);
+
 			} else {
-				Callable<Integer> returned = new Callable<Integer>() {
+				Callable<Paper> returned = new Callable<Paper>() {
 					@Override
-					public Integer call() throws Exception {
-						int id = Integer.parseInt(req.getParameter(PARAM_ID));
-
-						// System.out.println("______________________________________\n"
-						// + ">>>  ADD SELECTED STORY COOKIE");
-						addPaperInStory(req, resp, id);
-
-						return id;
+					public Paper call() throws Exception {
+						return paperDao.selectById(id);
 					}
 				};
-
-				int id = txManager.doInTransaction(returned);
-
-				// System.out.println(">>>  Redirect to :" + PAGE_OK);
-				resp.sendRedirect(PAGE_OK + "?" + PARAM_ID + "=" + id);
+				paper = txManager.doInTransaction(returned);
 			}
 
+			if (paper == null) {
+				throw new NullPointerException("Selected paper not found");
+			}
+
+			println(">>>  ADD SELECTED STORY COOKIE");
+			addPaperInStory(req, resp, paper);
+			println(">>>  Redirect to :" + PAGE_OK);
+			resp.sendRedirect(PAGE_OK + "?" + PARAM_ID + "=" + id);
 			return;
 
-		} catch (/*
-				 * DaoException | NumberFormatException | NullPointerException |
-				 * ReadWriteCodeException |
-				 */Exception e) {
-			// NOP
+		} catch (DaoException | NumberFormatException | NullPointerException
+				| ReadWriteCodeException | TransactionException e) {
+			println(e);
 		}
 
-		// System.out.println(">>>  Redirect to :" + PAGE_ERROR);
+		println(">>>  Redirect to :" + PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 
 	}
@@ -99,44 +97,29 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	 * Cookie map with name <b>selected</b>
 	 */
 	private void addPaperInStory(HttpServletRequest req,
-			HttpServletResponse resp, int id) throws DaoException,
+			HttpServletResponse resp, Paper paper) throws DaoException,
 			ReadWriteCodeException, NullPointerException {
 
 		incrementCountOfActiveRequest(req);
 		Set<Paper> papers = null;
 
 		try {
-
-			Paper paper = paperDao.selectById(id);
-			papers = getUserSelectedPaperSet(req, paper);
-			writePaperInCookie(req, resp, papers);
-
-		} catch (DaoException | NullPointerException | ReadWriteCodeException e) {
+			papers = readUserSelectedPaperSet(req, paper);
+			writeUserSelectedPaperSet(req, resp, papers);
+		} catch (NullPointerException | ReadWriteCodeException e) {
 			throw e;
-
 		} finally {
 			decrementCountOfActiveRequest(papers, req);
 		}
 
 	}
 
-	private void writePaperInCookie(HttpServletRequest req,
-			HttpServletResponse resp, Set<Paper> papers)
-			throws ReadWriteCodeException {
-		println("writePaperInCookie:" + papers);
-		Cookie selected = writePapersInCookie(papers);
-		selected.setPath(req.getContextPath() + "/");
-		resp.addCookie(selected);
-	}
-
 	private void decrementCountOfActiveRequest(Set<Paper> papers,
 			HttpServletRequest req) {
-
 		if (((AtomicInteger) req.getSession().getAttribute(
 				ATTR_ACTIVE_USER_REQUEST_COUNT)).decrementAndGet() == 0) {
 			papers = null;
 			req.getSession().removeAttribute(ATTR_USER_SELECTED_PAPER);
-			// System.out.println("*******************************");
 		}
 	}
 
@@ -161,67 +144,35 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	 * not exists.
 	 * 
 	 * @throws ReadWriteCodeException
-	 * 
 	 */
 	@SuppressWarnings("unchecked")
-	private Set<Paper> getUserSelectedPaperSet(HttpServletRequest req,
+	private Set<Paper> readUserSelectedPaperSet(HttpServletRequest req,
 			Paper paper) throws ReadWriteCodeException {
 
 		Set<Paper> papers = (Set<Paper>) req.getSession().getAttribute(
 				ATTR_USER_SELECTED_PAPER);
 
-		if (papers == null && (papers = getPapersFromCookie(req)) == null) {
+		if (papers == null
+				&& (papers = getPapersFromCookie(req.getCookies(), COOKIE_NAME)) == null) {
+			println(">>>  Paper from this request cookie:\n" + papers);
 			papers = Collections.singleton(paper);
 		} else {
-			// System.out.println(">>>  Paper from this request cookie:\n"
-			// + papers);
+			println(">>>  Paper from this request cookie:\n" + papers);
 			papers = new HashSet<Paper>(papers);
-
-			// System.out.println("------------------------------------" +
-			// paper.hashCode());
-
 			papers.add(paper);
-			// System.out.println(">>>  Papers sending in request cookie:\n"
-			// + papers);
 			papers = Collections.unmodifiableSet(papers);
 		}
+
 		req.getSession().setAttribute(ATTR_USER_SELECTED_PAPER, papers);
 		return papers;
 	}
 
-	/**
-	 * Return set of papers obtain from user saved as cookies in browser. If
-	 * cookie not found return NULL.
-	 * 
-	 * @throws ReadWriteCodeException
-	 * 
-	 */
-	private Set<Paper> getPapersFromCookie(HttpServletRequest req)
+	private void writeUserSelectedPaperSet(HttpServletRequest req,
+			HttpServletResponse resp, Set<Paper> papers)
 			throws ReadWriteCodeException {
-		Cookie[] cookies = req.getCookies();
-		if (cookies != null)
-			for (Cookie cookie : cookies)
-				if (cookie.getName().equals(COOKIE_NAME)) {
-
-					return ObjectBase64Coder.readSetFromString(cookie
-							.getValue());
-
-				}
-		return null;
-	}
-
-	/**
-	 * Return object of cookie with wrote BASE64 encode paper set as String
-	 * value parameter. Return NULL if can not write paper set in cookie
-	 * 
-	 * @throws ReadWriteCodeException
-	 */
-	private Cookie writePapersInCookie(Set<Paper> papers)
-			throws ReadWriteCodeException {
-
-		String cookieSetCode = ObjectBase64Coder.writeSetInString(papers);
-		return new Cookie(COOKIE_NAME, cookieSetCode);
-
+		println(">>>  Papers sending in request cookie:\n" + papers);
+		resp.addCookie(writePapersInCookie(papers, COOKIE_NAME,
+				req.getContextPath() + "/"));
 	}
 
 }

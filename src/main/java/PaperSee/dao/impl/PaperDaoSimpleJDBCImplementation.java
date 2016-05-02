@@ -81,10 +81,18 @@ public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 			}
 			conn.commit();
 		} catch (SQLException e) {
-			rollBackQuaetly(conn);
+			try {
+				rollBackQuaetly(conn);
+			} catch (SQLException e1) {
+				e.addSuppressed(e1);
+			}
 			throw new DaoSystemException(e);
 		} finally {
-			closeQuaetly(rs, stat, conn);
+			try {
+				closeQuaetly(rs, stat, conn);
+			} catch (Exception e1) {
+				throw new DaoSystemException(e1);
+			}
 		}
 		return papers;
 	}
@@ -112,10 +120,18 @@ public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 			}
 
 		} catch (SQLException e) {
-			rollBackQuaetly(conn);
+			try {
+				rollBackQuaetly(conn);
+			} catch (SQLException e1) {
+				e.addSuppressed(e1);
+			}
 			throw new DaoSystemException(e);
 		} finally {
-			closeQuaetly(rs, stat, conn);
+			try {
+				closeQuaetly(rs, stat, conn);
+			} catch (Exception e1) {
+				throw new DaoSystemException(e1);
+			}
 		}
 	}
 }

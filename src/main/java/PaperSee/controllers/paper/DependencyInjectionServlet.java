@@ -37,7 +37,7 @@ public class DependencyInjectionServlet extends HttpServlet {
 		if (path == null) {
 			throw new ServletException(APP_CTX_PATH + "init param==null");
 		}
-		// System.out.println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
+		// println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
 
 		try {
 			if (context == null)
@@ -77,10 +77,10 @@ public class DependencyInjectionServlet extends HttpServlet {
 		} catch (BeansException | SecurityException | IllegalArgumentException
 				| IllegalAccessException | InjectInitialException e) {
 			status = "EXCEPTION";
+			println(e);
 		}
 
-		 println( status + "."
-				+ this.getClass().getSimpleName());
+		println(status + "." + this.getClass().getSimpleName());
 
 	}
 

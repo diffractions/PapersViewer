@@ -17,6 +17,7 @@
 		<jdk.version>1.8</jdk.version>
 		<tomcat.version>6.0.32</tomcat.version>
 		<servlet.version>3.1.0</servlet.version>
+		<MySQL.version>5.1.35</MySQL.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -123,7 +124,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.35</version>
+			<version>${MySQL.version}</version>
 		</dependency>
 
 	</dependencies>

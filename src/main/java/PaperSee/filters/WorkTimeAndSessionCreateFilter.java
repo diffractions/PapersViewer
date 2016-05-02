@@ -11,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sun.javafx.binding.StringFormatter;
-
 import static utility.LogPrinter.*;
 
 public class WorkTimeAndSessionCreateFilter extends BaseHTTPFilter {
@@ -27,9 +25,11 @@ public class WorkTimeAndSessionCreateFilter extends BaseHTTPFilter {
 		long OUT = System.nanoTime();
 		int time = (int) TimeUnit.MILLISECONDS.convert((OUT - IN),
 				TimeUnit.NANOSECONDS);
-		println(StringFormatter
-				.format("Time to create response in server: %3d ms; request uri: %s \n",
-						time, arg0.getRequestURI()).get());
+		printlnEnd(new StringBuilder("Time to create response in server: ")
+				.append(time).append(" ms;\nRequest uri: ")
+				.append(arg0.getRequestURI())
+		);
+
 
 		addTime(arg0, session, time);
 

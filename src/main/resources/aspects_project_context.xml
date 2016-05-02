@@ -3,8 +3,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
-		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
 	<!-- <import resource="simple_project_context.xml" /> -->
@@ -15,7 +15,7 @@
 
 
 	<bean id="AOP-Exception-Print" class="aspect.AOPExceptionPrint"></bean>
-	<bean id="AOP-Log-AND-Time" class="aspect.AOPLogANDTime"></bean>
+	<bean id="AOP-Work-Time" class="aspect.AOPWorkTimes"></bean>
 	<bean id="AOP-Paper-Proxy" class="aspect.PaperProxy" />
 
 	<aop:config expose-proxy="true" proxy-target-class="true">
@@ -27,7 +27,7 @@
 				method="printException" throwing="throwable" />
 		</aop:aspect>
 
-		<aop:aspect id="logPrint" ref="AOP-Log-AND-Time">
+		<aop:aspect id="logPrint" ref="AOP-Work-Time">
 			<aop:pointcut expression="execution(public * * (..)) "
 				id="printers" />
 			<aop:around pointcut-ref="printers" method="profile" />

@@ -11,16 +11,16 @@ public class SimplePaper implements Paper {
 		int result = 1;
 		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		// System.out.println("IN HASH CODE: " + result);
+		// println("IN HASH CODE: " + result);
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 
-		// System.out.println("IN EQUALS: ");
-		// System.out.println(">>>  this : " + this);
-		// System.out.println(">>>  obj  : " +obj);
+		// println("IN EQUALS: ");
+		// println(">>>  this : " + this);
+		// println(">>>  obj  : " +obj);
 
 		if (this == obj) {
 			return true;
@@ -51,7 +51,7 @@ public class SimplePaper implements Paper {
 			return false;
 		}
 
-		// System.out.println("TRUE");
+		// println("TRUE");
 		return true;
 	}
 
@@ -98,7 +98,7 @@ public class SimplePaper implements Paper {
 	 * empty constructor only to correct work serializable
 	 */
 	public SimplePaper() {
-		// System.out.println(">>>  EMPTY PAPER CONSTRUCTOR");
+		// println(">>>  EMPTY PAPER CONSTRUCTOR");
 	}
 
 	@Override

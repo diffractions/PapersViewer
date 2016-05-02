@@ -20,7 +20,6 @@ public class PaperDaoDemo implements PaperDao {
 		this.papers = papers;
 	}
 
-
 	public CopyOnWriteArraySet<Paper> selectAll() throws DaoSystemException {
 		if (papers != null)
 			return new CopyOnWriteArraySet<Paper>(papers.values());
@@ -43,7 +42,7 @@ public class PaperDaoDemo implements PaperDao {
 					+ "\' is incorrect!");
 		}
 
-		// System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>" + paper.hashCode());
+		// println(" >>>" + paper.hashCode());
 		return paper;
 	}
 

@@ -18,6 +18,8 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionIdListener;
 import javax.servlet.http.HttpSessionListener;
 
+import static utility.LogPrinter.println;
+
 /**
  * Application Lifecycle Listener implementation class filterStartListener
  *
@@ -30,26 +32,26 @@ public class SessionWriteFileAndChangeListener implements
 	@Override
 	public void sessionIdChanged(HttpSessionEvent arg0, String arg1) {
 
-//		System.out.println("========== SESSION ID WAS CHANGED ==========");
-//		System.out.println("--------SESSION INFO--------");
-//		System.out.println("|--->  New session id : "
-//				+ arg0.getSession().getId());
-//		System.out.println("|--->  Session max inactive time : "
-//				+ arg0.getSession().getMaxInactiveInterval());
+		// System.out.println("========== SESSION ID WAS CHANGED ==========");
+		// System.out.println("--------SESSION INFO--------");
+		// System.out.println("|--->  New session id : "
+		// + arg0.getSession().getId());
+		// System.out.println("|--->  Session max inactive time : "
+		// + arg0.getSession().getMaxInactiveInterval());
 
 	}
 
 	@Override
 	public void sessionCreated(HttpSessionEvent arg0) {
 
-//		System.out.println("========== SESSION WAS CREATED ==========");
-//		System.out.println("|===>> SESSION INFO");
-//		HttpSession session = arg0.getSession();
-//		System.out.println("|--->  Session id : " + session.getId());
-//		System.out.println("|--->  Session from : "
-//				+ new Date(session.getCreationTime()));
-//		System.out.println("|--->  Session max inactive time : "
-//				+ session.getMaxInactiveInterval());
+		// System.out.println("========== SESSION WAS CREATED ==========");
+		// System.out.println("|===>> SESSION INFO");
+		// HttpSession session = arg0.getSession();
+		// System.out.println("|--->  Session id : " + session.getId());
+		// System.out.println("|--->  Session from : "
+		// + new Date(session.getCreationTime()));
+		// System.out.println("|--->  Session max inactive time : "
+		// + session.getMaxInactiveInterval());
 
 	}
 
@@ -57,11 +59,11 @@ public class SessionWriteFileAndChangeListener implements
 	@Override
 	public void sessionDestroyed(HttpSessionEvent arg0) {
 
-//		System.out.println("========== SESSION WAS DESTROYED ==========");
-//		System.out.println("|===>> SESSION INFO");
-//		System.out.println("|--->  Session was created by : "
-//				+ arg0.getSession().getAttribute("first Request URI"));
-//
+		// System.out.println("========== SESSION WAS DESTROYED ==========");
+		// System.out.println("|===>> SESSION INFO");
+		// System.out.println("|--->  Session was created by : "
+		// + arg0.getSession().getAttribute("first Request URI"));
+		//
 		writeStory(
 				arg0.getSession()
 						.getServletContext()
@@ -76,7 +78,6 @@ public class SessionWriteFileAndChangeListener implements
 
 	}
 
-
 	private synchronized void writeStory(String path,
 			Map<String, Integer> story,
 			ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>> loadTime,
@@ -90,10 +91,10 @@ public class SessionWriteFileAndChangeListener implements
 					+ System.lineSeparator());
 			Iterator<Entry<String, Integer>> stryFile = story.entrySet()
 					.iterator();
-//			System.out.println("|--->> Session story:");
+			// System.out.println("|--->> Session story:");
 			while (stryFile.hasNext()) {
 				Entry<String, Integer> e = stryFile.next();
-//				System.out.println("|--->> " + e);
+				// System.out.println("|--->> " + e);
 				double sum = 0;
 				for (Integer i : loadTime.get(e.getKey()))
 					sum += i;
@@ -106,7 +107,7 @@ public class SessionWriteFileAndChangeListener implements
 					+ System.lineSeparator());
 			writer.flush();
 		} catch (IOException e) {
-			e.printStackTrace();
+			println(e);
 		}
 
 	}
@@ -114,9 +115,9 @@ public class SessionWriteFileAndChangeListener implements
 	@Override
 	public void attributeAdded(HttpSessionBindingEvent event) {
 
-//		System.out.println("|===>> Session attribute added");
-//		System.out.println("|--->  Atribute name:" + event.getName());
-//		System.out.println("|--->  Atribute value:" + event.getValue());
+		// System.out.println("|===>> Session attribute added");
+		// System.out.println("|--->  Atribute name:" + event.getName());
+		// System.out.println("|--->  Atribute value:" + event.getValue());
 	}
 
 	@Override

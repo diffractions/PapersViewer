@@ -14,7 +14,6 @@ import dao.exceptions.NoSuchEntityException;
 import entity.Paper;
 import entity.SimplePaper;
 import static utility.JBDCUtil.*;
-import static utility.LogPrinter.*;
 
 public class PaperDaoJDBCTransactionImplementation implements PaperDao {
 
@@ -35,8 +34,6 @@ public class PaperDaoJDBCTransactionImplementation implements PaperDao {
 
 		try {
 			Connection conn = dataSource.getConnection();
-			println(dataSource.toString());
-			println(conn.toString());
 			stat = conn.prepareStatement(SELECT_ALL_SQL);
 			rs = stat.executeQuery();
 			while (rs.next()) {
@@ -47,7 +44,11 @@ public class PaperDaoJDBCTransactionImplementation implements PaperDao {
 		} catch (SQLException e) {
 			throw new DaoSystemException(e);
 		} finally {
-			closeQuaetly(rs, stat);
+			try {
+				closeQuaetly(rs, stat);
+			} catch (Exception e1) {
+				throw new DaoSystemException(e1);
+			}
 		}
 
 		return papers;
@@ -74,7 +75,11 @@ public class PaperDaoJDBCTransactionImplementation implements PaperDao {
 		} catch (SQLException e) {
 			throw new DaoSystemException(e);
 		} finally {
-			closeQuaetly(rs, stat);
+			try {
+				closeQuaetly(rs, stat);
+			} catch (Exception e1) {
+				throw new DaoSystemException(e1);
+			}
 		}
 
 	}

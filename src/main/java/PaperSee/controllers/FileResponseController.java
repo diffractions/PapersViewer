@@ -26,35 +26,34 @@ public class FileResponseController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-//		System.out.println("______________________________________\n"
-//				+ ">>>  Response from file or directory");
+		// println(
+		// + ">>>  Response from file or directory");
 
 		try {
 			String absolutePath = req.getRequestURI().substring(
 					req.getSession().getServletContext().getContextPath()
 							.getBytes().length);
-//			System.out.println(">>>  Absolute path : " + absolutePath);
+			// println(">>>  Absolute path : " + absolutePath);
 			String path = getServletContext().getRealPath(absolutePath)
 					.replace("%20", " ");
-//			System.out.println(">>>  Real Path : " + path);
+			// .println(">>>  Real Path : " + path);
 			File file = new File(path);
 
 			if (file.exists()) {
 
 				if (file.isDirectory()) {
 
-//					System.out.println(">>>  Directory found");
-//					System.out
-//							.println(">>> Add files from folder in request attribute");
+					// println(">>>  Directory found");
+					// println(">>> Add files from folder in request attribute");
 					req.setAttribute("filesChildren", file.listFiles());
 
-//					System.out.println(">>>  Redirect to " + PAGE_OK);
+					// println(">>>  Redirect to " + PAGE_OK);
 					getServletContext().getRequestDispatcher(PAGE_OK).include(
 							req, resp);
 
 				} else {
-//					System.out.println(">>>  Fille found");
-//					System.out.println(">>>  Write file in output stream");
+					// println(">>>  Fille found");
+					// println(">>>  Write file in output stream");
 					try (FileInputStream fileInputStream = new FileInputStream(
 							file);
 							FileChannel fileChannel = fileInputStream
@@ -74,8 +73,8 @@ public class FileResponseController extends HttpServlet {
 			// NOP
 		}
 
-//		System.out.println(">>>  Fille not found");
-//		System.out.println(">>>  Redirect to " + PAGE_ERROR);
+		// println(">>>  Fille not found");
+		// println(">>>  Redirect to " + PAGE_ERROR);
 		getServletContext().getRequestDispatcher("/" + PAGE_ERROR).include(req,
 				resp);
 

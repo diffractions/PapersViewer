@@ -1,5 +1,6 @@
 package controllers.paper;
 
+import static utility.LogPrinter.println;
 import inject.Inject;
 
 import java.io.IOException;
@@ -16,9 +17,7 @@ import dao.exceptions.DaoException;
 import entity.Paper;
 
 public class PaperController extends DependencyInjectionServlet {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
 	public static final String PAGE_OK = "/Paper.jsp";
@@ -32,11 +31,10 @@ public class PaperController extends DependencyInjectionServlet {
 
 	@Inject("txManager")
 	public TransactionManager txManager;
-
+	
 	@Override
 	public void init() throws ServletException {
 		super.init();
-
 	}
 
 	@Override
@@ -49,38 +47,36 @@ public class PaperController extends DependencyInjectionServlet {
 				throw new DaoException("Papers DAO not found");
 			}
 
+			Paper modelPaper;
+			int id = Integer.parseInt(req.getParameter(PARAM_ID));
+			println(">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
+					+ " to request attribute");
+
 			if (txManager == null) {
-				throw new TransactionException("Transaction field is empty");
+				println("Transaction field is empty");
+				modelPaper = paperDao.selectById(id);
 			} else {
 				Callable<Paper> returned = new Callable<Paper>() {
 					@Override
 					public Paper call() throws Exception {
-						// System.out.println("______________________________________\n"
-						// + ">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
-						// + " to request attribute");
-						int id = Integer.parseInt(req.getParameter(PARAM_ID));
-						Paper modelPaper = paperDao.selectById(id);
-						return modelPaper;
+						return paperDao.selectById(id);
 					}
 				};
-
-				Paper modelPaper = txManager.doInTransaction(returned);
-				req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, modelPaper);
-
-				// OK
-				// System.out.println(">>>  Redirect to :" + PAGE_OK);
-				getServletContext().getRequestDispatcher(PAGE_OK).include(req,
-						resp);
-				return;
-
+				modelPaper = txManager.doInTransaction(returned);
 			}
 
-		} catch (/* DaoException | NumberFormatException | TransactionException */Exception e) {
+			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, modelPaper);
+			println(">>>  Redirect to :" + PAGE_OK);
+			getServletContext().getRequestDispatcher(PAGE_OK)
+					.include(req, resp);
+			return;
+
+		} catch (DaoException | NumberFormatException | TransactionException e) {
 			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
-			// System.err.println(">>>  Wrong ID");
+			println(e);
 		}
 
-		// System.out.println(">>>  Redirect to :" + PAGE_ERROR);
+		println(">>>  Redirect to :" + PAGE_ERROR);
 		// resp.sendRedirect(PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}

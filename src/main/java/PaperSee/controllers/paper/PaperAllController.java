@@ -15,14 +15,10 @@ import transaction.exception.TransactionException;
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
-
-//import entity.SimplePaper;
+import static utility.LogPrinter.*;
 
 public class PaperAllController extends DependencyInjectionServlet {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public static final String PAGE_OK = "/PaperAll.jsp";
@@ -35,7 +31,7 @@ public class PaperAllController extends DependencyInjectionServlet {
 
 	@Inject("txManager")
 	public TransactionManager txManager;
-
+	
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -46,47 +42,41 @@ public class PaperAllController extends DependencyInjectionServlet {
 			throws ServletException, IOException {
 
 		try {
-			// System.out.println("______________________________________\n"
-			// + ">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
-			// + " to request attribute");
+			println(">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
+					+ " to request attribute");
 
 			if (paperDao == null) {
 				throw new DaoException("Papers DAO not found");
 			}
 
+			CopyOnWriteArraySet<Paper> model;
 			if (txManager == null) {
-				throw new TransactionException("Transaction field is empty");
+				println("Transaction field is empty");
+				model = paperDao.selectAll();
 			} else {
 				Callable<CopyOnWriteArraySet<Paper>> returned = new Callable<CopyOnWriteArraySet<Paper>>() {
 					@Override
 					public CopyOnWriteArraySet<Paper> call() throws Exception {
-
 						return paperDao.selectAll();
 					}
 				};
-
-				CopyOnWriteArraySet<Paper> model = txManager
-						.doInTransaction(returned);
-				// System.out.println(">>>  ALL_PAPERS:" + model);
-				req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
-
-				// System.out.println(">>>  Redirect to :" + PAGE_OK);
-				getServletContext().getRequestDispatcher(PAGE_OK).include(req,
-						resp);
-				return;
-
+				model = txManager.doInTransaction(returned);
 			}
 
-		} catch (/* DaoException | TransactionException | */Exception e) {
+			println(">>>  ALL_PAPERS:" + model);
+			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
 
-			System.out
-					.println("CONTROLLERS.PAPER.PAC.DoGet:EXCEPTION.caused by:"
-							+ e.getMessage());
+			println(">>>  Redirect to :" + PAGE_OK);
+			getServletContext().getRequestDispatcher(PAGE_OK)
+					.include(req, resp);
+			return;
+
+		} catch (DaoException | TransactionException e) {
+			println(e);
 			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
-
 		}
 
-		// System.out.println(">>>  Redirect to :" + PAGE_ERROR);
+		println(">>>  Redirect to :" + PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}
 }
