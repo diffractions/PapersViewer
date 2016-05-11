@@ -13,15 +13,7 @@
 	</context-param>
 	<context-param>
 		<param-name>project_context</param-name>
-
-		<!-- <param-value>/expression_language_in_XML_project_context.xml</param-value> -->
 		<param-value>/aspects_project_context.xml</param-value>
-		<!-- <param-value>/project_context.xml</param-value> -->
-		<!-- <param-value>/simple_project_context.xml</param-value> -->
-		<!-- <param-value>/transaction_project_context.xml</param-value> -->
-		<!-- <param-value>/simple_JDBC_project_context.xml</param-value> -->
-
-
 	</context-param>
 	<servlet>
 		<servlet-name>404</servlet-name>
@@ -131,5 +123,14 @@
 	</filter-mapping>
 	<listener>
 		<listener-class>listeners.SessionWriteFileAndChangeListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>listeners.DriverCreatorListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>listeners.ShowTimerListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>listeners.RequestInformationListener</listener-class>
 	</listener>
 </web-app>

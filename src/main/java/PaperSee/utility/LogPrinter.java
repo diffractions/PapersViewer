@@ -6,39 +6,6 @@ import java.util.StringTokenizer;
 
 public class LogPrinter {
 
-	static {
-		new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-
-				while (true) {
-					GregorianCalendar inTime = new GregorianCalendar();
-					if (inTime.get(GregorianCalendar.SECOND) == 0)
-						break;
-				}
-
-				while (true) {
-					GregorianCalendar inTime = new GregorianCalendar();
-					System.out.println("===========\n>>>"
-							+ inTime.get(GregorianCalendar.HOUR) + ":"
-							+ inTime.get(GregorianCalendar.MINUTE)
-							+ "<<<\n===========");
-
-					synchronized (this) {
-						try {
-							this.wait(60000);
-							this.notifyAll();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-
-				}
-			}
-		}).start();
-	}
-
 	private final static int MAIN_TEXT_SPACE_POSITION = 11;
 	private final static byte SPAECE = 32;
 	private final static byte NEW_LINE = 10;
@@ -145,7 +112,7 @@ public class LogPrinter {
 	private static StringBuilder getExceptionString(CharSequence str,
 			Throwable e) {
 
-//		 e.printStackTrace();
+		// e.printStackTrace();
 
 		return new StringBuilder().append("EXCEPTION > ").append(str)
 				.append("\nEception type:").append(TAB_IN_EXCEPTION)

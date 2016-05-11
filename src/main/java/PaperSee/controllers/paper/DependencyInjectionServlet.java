@@ -84,4 +84,9 @@ public class DependencyInjectionServlet extends HttpServlet {
 
 	}
 
+	@Override
+	public void destroy() {
+		println("DESTROY: " + this.getClass().getSimpleName());
+		super.destroy();
+	}
 }
