@@ -7,8 +7,17 @@
 <title>Error page</title>
 </head>
 <body>
-	<h1>"${pageContext.request.requestURI}" not exists</h1>
-	<h3 style="color: red;">${errorString}</h3>
+
+	<center>
+		<span
+			style="color: fuchsia; font-size: 800%; border-width: medium; border-color: teal; border-style: solid; border-width: 4mm; margin-left: -50%;">${errorCode}</span>
+	</center>
+	<h1>
+		Error request: "<span style="color: blue;">${pageContext.request.requestURI}</span>"
+	</h1>
+	<h3>
+		Error message: "<span style="color: red;">${errorString}</span>"
+	</h3>
 	You can proceed your work with other pages:
 	<br />
 	<a href="/PapersViewer/Index.jsp"> Index.jsp</a>

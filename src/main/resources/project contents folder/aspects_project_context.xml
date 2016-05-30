@@ -7,6 +7,8 @@
 		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
 
 
+	<!-- <import resource="logging_project_context.xml" /> -->
+
 	<!-- <import resource="simple_project_context.xml" /> -->
 	<!-- <import resource="expression_language_in_XML_project_context.xml" /> -->
 	<!-- <import resource="project_context.xml" /> -->

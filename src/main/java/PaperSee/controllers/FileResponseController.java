@@ -1,12 +1,10 @@
 package controllers;
 
+import org.apache.log4j.Logger;
+
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.FileChannel;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -15,66 +13,63 @@ import javax.servlet.http.HttpServletResponse;
 
 public class FileResponseController extends HttpServlet {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private static final String PAGE_OK = "/resources/DirectoryView.jsp";
-	private static final String PAGE_ERROR = "404.jsp";
+	public static final long serialVersionUID = 1L;
+	public static final String PAGE_DIRECTORY = "/resources/DirectoryView.jsp";
+	public static final String PAGE_FILE = "/showFile";
+	public static final String PAGE_ERROR = "404.jsp";
+	public static final String ATTRIBUTE_ERR_CODE = "errorCode";
+	public static final String ATTRIBUTE_FILE_PATH = "filePath";
+	public static final String ATTRIBUTE_FILES_CHILDREN = "filesChildren";
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		// println(
-		// + ">>>  Response from file or directory");
+		Logger.getLogger("LOG").debug(">>>  Response from file or directory");
 
 		try {
 			String absolutePath = req.getRequestURI().substring(
 					req.getSession().getServletContext().getContextPath()
 							.getBytes().length);
-			// println(">>>  Absolute path : " + absolutePath);
 			String path = getServletContext().getRealPath(absolutePath)
 					.replace("%20", " ");
-			// .println(">>>  Real Path : " + path);
+
+			Logger.getLogger("LOG").debug(">>>  Absolute path : " + absolutePath);
+			Logger.getLogger("LOG").debug(">>>  Real Path : " + path);
 			File file = new File(path);
 
 			if (file.exists()) {
-
+ 
 				if (file.isDirectory()) {
 
-					// println(">>>  Directory found");
-					// println(">>> Add files from folder in request attribute");
-					req.setAttribute("filesChildren", file.listFiles());
+					Logger.getLogger("LOG").debug(">>>  Directory found");
+					Logger.getLogger("LOG").debug(
+							">>> Add files from folder in request attribute");
+					req.setAttribute(ATTRIBUTE_FILES_CHILDREN, file.listFiles());
 
-					// println(">>>  Redirect to " + PAGE_OK);
-					getServletContext().getRequestDispatcher(PAGE_OK).include(
-							req, resp);
+					Logger.getLogger("LOG").debug(">>>  Redirect to " + PAGE_DIRECTORY);
+					getServletContext().getRequestDispatcher(PAGE_DIRECTORY)
+							.include(req, resp);
 
 				} else {
-					// println(">>>  Fille found");
-					// println(">>>  Write file in output stream");
-					try (FileInputStream fileInputStream = new FileInputStream(
-							file);
-							FileChannel fileChannel = fileInputStream
-									.getChannel();
-							OutputStream os = resp.getOutputStream();) {
+					Logger.getLogger("LOG").debug(">>>  Fille found");
+					Logger.getLogger("LOG").debug(">>> Add file in request attribute");
+					req.setAttribute(ATTRIBUTE_FILE_PATH, path);
 
-						ByteBuffer buffer = ByteBuffer
-								.allocate((int) fileChannel.size());
-						fileChannel.read(buffer);
-						resp.setContentLengthLong(fileChannel.size());
-						os.write(buffer.array());
-					}
+
+					Logger.getLogger("LOG").debug(">>> Det Request Dispatcher: include " + PAGE_FILE);
+					getServletContext().getRequestDispatcher(PAGE_FILE)
+							.include(req, resp);
 				}
 				return;
 			}
 		} catch (FileNotFoundException | NullPointerException e) {
-			// NOP
+			Logger.getLogger("LOG").fatal("", e);
 		}
 
-		// println(">>>  Fille not found");
-		// println(">>>  Redirect to " + PAGE_ERROR);
+		Logger.getLogger("LOG").debug(">>>  Fille not found");
+		Logger.getLogger("LOG").debug(">>>  Redirect to " + PAGE_ERROR);
+		req.setAttribute(ATTRIBUTE_ERR_CODE, "404");
 		getServletContext().getRequestDispatcher("/" + PAGE_ERROR).include(req,
 				resp);
 

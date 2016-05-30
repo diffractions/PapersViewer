@@ -1,21 +1,20 @@
 package transaction;
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
+//import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.Callable;
 
 import transaction.exception.TransactionException;
-import static utility.JBDCUtil.*;
-import static utility.LogPrinter.println;
+import utility.JBDCUtil;
+import static utility.JBDCUtil.closeQuaetly;
 
 public class TransactionManagerImpl extends BaseDataSource implements
 		TransactionManager {
 
-	private final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/paper_test?user=root&password=si17st18";
 	private static ThreadLocal<Connection> connectionHolder = new ThreadLocal<>();
-	private final String NET_START_MYSQL = "cmd start cmd.exe /c net start mysql";
+	private final String JDBC_URL = "jdbc:mysql://127.0.0.1:3306/paper_test?user=root&password=si17st18";
 
 	@Override
 	public <T> T doInTransaction(Callable<T> unitOfWork)
@@ -25,23 +24,9 @@ public class TransactionManagerImpl extends BaseDataSource implements
 		T result = null;
 
 		try {
-			conn = DriverManager.getConnection(JDBC_URL);
+			conn = JBDCUtil.getConnection(JDBC_URL);
 		} catch (SQLException e) {
-			println("FOUND EXCEPTION IN CONNECTION, TRY RECONNECT", e);
-			try {
-				Process proc = Runtime.getRuntime().exec(NET_START_MYSQL);
-				proc.waitFor();
-				conn = DriverManager.getConnection(JDBC_URL);
-				println("RECONNECT.OK");
-			} catch (IOException | SQLException | InterruptedException e1) {
-				try {
-					e1.initCause(e);
-				} catch (Exception e2) {
-					println("EXCEPTION IN INIT CAUSE", e2);
-				}
-				println("RECONNECT.FAILURE");
-				throw new TransactionException(e1);
-			}
+			throw new TransactionException("Failed to connect to database",e);
 		}
 
 		try {

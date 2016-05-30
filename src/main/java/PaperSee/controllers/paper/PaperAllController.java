@@ -15,7 +15,7 @@ import transaction.exception.TransactionException;
 import dao.PaperDao;
 import dao.exceptions.DaoException;
 import entity.Paper;
-import static utility.LogPrinter.*;
+import org.apache.log4j.Logger;
 
 public class PaperAllController extends DependencyInjectionServlet {
 
@@ -24,26 +24,23 @@ public class PaperAllController extends DependencyInjectionServlet {
 	public static final String PAGE_OK = "/PaperAll.jsp";
 	public static final String PAGE_ERROR = "/404.jsp";
 	public static final String ATTRIBUTE_MODEL_TO_VIEW = "papers";
-	public static final String ATTRIBUTE_ERR = "errorString";
+	public static final String ATTRIBUTE_ERR_STR = "errorString";
+	public static final String ATTRIBUTE_ERR_CODE = "errorCode";
 
 	@Inject("paperDao")
 	public PaperDao paperDao;
 
 	@Inject("txManager")
 	public TransactionManager txManager;
-	
-	@Override
-	public void init() throws ServletException {
-		super.init();
-	}
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
 		try {
-			println(">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
-					+ " to request attribute");
+			Logger.getLogger("LOG").info(
+					">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
+							+ " to request attribute");
 
 			if (paperDao == null) {
 				throw new DaoException("Papers DAO not found");
@@ -51,7 +48,7 @@ public class PaperAllController extends DependencyInjectionServlet {
 
 			CopyOnWriteArraySet<Paper> model;
 			if (txManager == null) {
-				println("Transaction field is empty");
+				Logger.getLogger("LOG").warn("Transaction field is empty");
 				model = paperDao.selectAll();
 			} else {
 				Callable<CopyOnWriteArraySet<Paper>> returned = new Callable<CopyOnWriteArraySet<Paper>>() {
@@ -63,20 +60,22 @@ public class PaperAllController extends DependencyInjectionServlet {
 				model = txManager.doInTransaction(returned);
 			}
 
-			println(">>>  ALL_PAPERS:" + model);
+			Logger.getLogger("LOG").info(">>>  ALL_PAPERS:" + model);
 			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, model);
 
-			println(">>>  Redirect to :" + PAGE_OK);
+			Logger.getLogger("LOG").info(">>>  Redirect to :" + PAGE_OK);
 			getServletContext().getRequestDispatcher(PAGE_OK)
 					.include(req, resp);
 			return;
 
 		} catch (DaoException | TransactionException e) {
-			println(e);
-			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
+			Logger.getLogger("LOG").error("", e);
+
+			req.setAttribute(ATTRIBUTE_ERR_CODE, "404");
+			req.setAttribute(ATTRIBUTE_ERR_STR, e.getMessage());
 		}
 
-		println(">>>  Redirect to :" + PAGE_ERROR);
+		Logger.getLogger("LOG").warn(">>>  Redirect to :" + PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}
 }

@@ -15,15 +15,16 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import static utility.LogPrinter.*;
+import org.apache.log4j.Logger;
 
 /**
  * Servlet implementation class InjectAnnotationsPaperController
  */
 public class DependencyInjectionServlet extends HttpServlet {
 
-	private static final long serialVersionUID = 1L;
 	public static final String APP_CTX_PATH = "project_context";
+
+	private static final long serialVersionUID = 1L;
 	private static ApplicationContext context;
 	private String status = "OK";
 
@@ -37,7 +38,8 @@ public class DependencyInjectionServlet extends HttpServlet {
 		if (path == null) {
 			throw new ServletException(APP_CTX_PATH + "init param==null");
 		}
-		// println(">>>  APP_CTX_PATH : " + APP_CTX_PATH);
+		Logger.getLogger("LOG").debug(
+				">>>  APP_CTX_PATH : " + APP_CTX_PATH + ">>>  Path : " + path);
 
 		try {
 			if (context == null)
@@ -77,16 +79,16 @@ public class DependencyInjectionServlet extends HttpServlet {
 		} catch (BeansException | SecurityException | IllegalArgumentException
 				| IllegalAccessException | InjectInitialException e) {
 			status = "EXCEPTION";
-			println(e);
+			Logger.getLogger("LOG").error("", e);
 		}
 
-		println(status + "." + this.getClass().getSimpleName());
+		Logger.getLogger("LOG").info(status + "." + this.getClass().getSimpleName());
 
 	}
 
 	@Override
 	public void destroy() {
-		println("DESTROY: " + this.getClass().getSimpleName());
+		Logger.getLogger("LOG").info("DESTROY: " + this.getClass().getSimpleName());
 		super.destroy();
 	}
 }

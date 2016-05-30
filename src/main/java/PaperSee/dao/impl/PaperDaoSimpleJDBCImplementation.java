@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
-import java.util.Properties;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import com.sun.javafx.binding.StringFormatter;
@@ -18,8 +17,10 @@ import dao.exceptions.DaoSystemException;
 import dao.exceptions.NoSuchEntityException;
 import entity.Paper;
 import entity.SimplePaper;
-import static utility.JBDCUtil.*;
-import static utility.LogPrinter.*;
+import org.apache.log4j.Logger;
+import static utility.JBDCUtil.getConnection;
+import static utility.JBDCUtil.closeQuaetly;
+import static utility.JBDCUtil.rollBackQuaetly;
 
 public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 
@@ -43,7 +44,7 @@ public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 				while (dr.hasMoreElements()) {
 					Driver d = dr.nextElement();
 					DriverManager.deregisterDriver(d);
-					println(" drivers - " + d);
+					Logger.getLogger("LOG").info(" drivers - " + d);
 				}
 		} catch (Exception e1) {
 			throw new DaoRuntimeException(e1);
@@ -57,7 +58,7 @@ public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 			if (dr.hasMoreElements() == false)
 				throw new NullPointerException("DRIVERS NOT FOUNDS");
 			while (dr.hasMoreElements()) {
-				println("drivers - " + dr.nextElement());
+				Logger.getLogger("LOG").info("drivers - " + dr.nextElement());
 			}
 		} catch (Exception e1) {
 			throw new DaoRuntimeException(e1);
@@ -71,7 +72,7 @@ public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 		ResultSet rs = null;
 		CopyOnWriteArraySet<Paper> papers = new CopyOnWriteArraySet<Paper>();
 		try {
-			conn = DriverManager.getConnection(JDBC_URL, new Properties());
+			conn = getConnection(JDBC_URL);
 			conn.setAutoCommit(false);
 			stat = conn.createStatement();
 			rs = stat.executeQuery(SELECT_ALL_SQL);
@@ -105,11 +106,10 @@ public class PaperDaoSimpleJDBCImplementation implements PaperDao {
 		ResultSet rs = null;
 
 		try {
-			conn = DriverManager.getConnection(JDBC_URL, new Properties());
+			conn = getConnection(JDBC_URL);
 			conn.setAutoCommit(false);
 			stat = conn.createStatement();
-			rs = stat.executeQuery(StringFormatter.format(SELECT_BY_ID_SQL, id)
-					.get());
+			rs = stat.executeQuery(StringFormatter.format(SELECT_BY_ID_SQL, id).get());
 			if (rs.next()) {
 				conn.commit();
 				return new SimplePaper(rs.getInt("id"), rs.getString("title"));

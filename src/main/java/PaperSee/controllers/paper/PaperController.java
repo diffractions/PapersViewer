@@ -1,6 +1,6 @@
 package controllers.paper;
 
-import static utility.LogPrinter.println;
+import org.apache.log4j.Logger;
 import inject.Inject;
 
 import java.io.IOException;
@@ -23,7 +23,8 @@ public class PaperController extends DependencyInjectionServlet {
 	public static final String PAGE_OK = "/Paper.jsp";
 	public static final String PAGE_ERROR = "/404.jsp";
 	public static final String ATTRIBUTE_MODEL_TO_VIEW = "paper";
-	public static final String ATTRIBUTE_ERR = "errorString";
+	public static final String ATTRIBUTE_ERR_STR = "errorString";
+	public static final String ATTRIBUTE_ERR_CODE = "errorCode";
 	public static final String PARAM_ID = "id";
 
 	@Inject("paperDao")
@@ -31,11 +32,7 @@ public class PaperController extends DependencyInjectionServlet {
 
 	@Inject("txManager")
 	public TransactionManager txManager;
-	
-	@Override
-	public void init() throws ServletException {
-		super.init();
-	}
+
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -49,11 +46,12 @@ public class PaperController extends DependencyInjectionServlet {
 
 			Paper modelPaper;
 			int id = Integer.parseInt(req.getParameter(PARAM_ID));
-			println(">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
-					+ " to request attribute");
+			Logger.getLogger("LOG").info(
+					">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
+							+ " to request attribute");
 
 			if (txManager == null) {
-				println("Transaction field is empty");
+				Logger.getLogger("LOG").warn("Transaction field is empty");
 				modelPaper = paperDao.selectById(id);
 			} else {
 				Callable<Paper> returned = new Callable<Paper>() {
@@ -66,17 +64,18 @@ public class PaperController extends DependencyInjectionServlet {
 			}
 
 			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, modelPaper);
-			println(">>>  Redirect to :" + PAGE_OK);
+			Logger.getLogger("LOG").info(">>>  Redirect to :" + PAGE_OK);
 			getServletContext().getRequestDispatcher(PAGE_OK)
 					.include(req, resp);
 			return;
 
 		} catch (DaoException | NumberFormatException | TransactionException e) {
-			req.setAttribute(ATTRIBUTE_ERR, e.getMessage());
-			println(e);
+			req.setAttribute(ATTRIBUTE_ERR_STR, e.getMessage());
+			req.setAttribute(ATTRIBUTE_ERR_CODE, "404");
+			Logger.getLogger("LOG").error("", e);
 		}
 
-		println(">>>  Redirect to :" + PAGE_ERROR);
+		Logger.getLogger("LOG").warn(">>>  Redirect to :" + PAGE_ERROR);
 		// resp.sendRedirect(PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}
