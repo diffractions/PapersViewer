@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:p="http://www.springframework.org/schema/p"
@@ -11,14 +10,14 @@
 
 	<!-- <import resource="simple_project_context.xml" /> -->
 	<!-- <import resource="expression_language_in_XML_project_context.xml" /> -->
-	<!-- <import resource="project_context.xml" /> -->
+<!-- 	<import resource="project_context.xml" /> -->
 	<!-- <import resource="simple_JDBC_project_context.xml" /> -->
 	<import resource="transaction_project_context.xml" />
 
 
 	<bean id="AOP-Exception-Print" class="aspect.AOPExceptionPrint"></bean>
-	<bean id="AOP-Work-Time" class="aspect.AOPWorkTimes"></bean>
-	<bean id="AOP-Paper-Proxy" class="aspect.PaperProxy" />
+	<bean id="AOP-Work-Time" class="aspect.AOPWorkTimes" scope="singleton"></bean>
+	<bean id="AOP-Paper-Proxy" class="aspect.PaperProxy" scope="singleton" />
 
 	<aop:config expose-proxy="true" proxy-target-class="true">
 

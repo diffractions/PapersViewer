@@ -8,8 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.Logger;
+ 
 
 //@WebFilter(filterName = "WorkTimeFilter", urlPatterns = { "/*" })
 public class SessionCreateFilter extends BaseHTTPFilter {
@@ -30,12 +29,12 @@ public class SessionCreateFilter extends BaseHTTPFilter {
 
 		if (session.isNew()) {
 			session.setMaxInactiveInterval(MAX_INACTIVE_INTERVAL);
-			Logger.getLogger("LOG").info(
+			log.info(
 					"NEW SESSION\ninterval is "
 							+ session.getMaxInactiveInterval());
 			session.setAttribute(ATTRIBUTE_FIRST_REQUEST, arg0.getRequestURI());
 		} else {
-			Logger.getLogger("LOG").info(
+			log.info(
 					"OLD SESSION\ninterval is "
 							+ session.getMaxInactiveInterval());/*
 																 * arg0.

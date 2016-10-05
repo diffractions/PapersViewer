@@ -14,5 +14,10 @@
 		<property name="dataSource" ref="txManager" />
 	</bean>
 
+	<bean id="paperInsertDao" class="dao.impl.PaperInsertDaoJDBCTransactionImplementation"
+		scope="singleton">
+		<property name="dataSource" ref="txManager" />
+	</bean>
+
 
 </beans>

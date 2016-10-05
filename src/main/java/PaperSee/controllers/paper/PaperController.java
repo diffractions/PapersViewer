@@ -1,6 +1,5 @@
 package controllers.paper;
-
-import org.apache.log4j.Logger;
+ 
 import inject.Inject;
 
 import java.io.IOException;
@@ -20,8 +19,8 @@ public class PaperController extends DependencyInjectionServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	public static final String PAGE_OK = "/Paper.jsp";
-	public static final String PAGE_ERROR = "/404.jsp";
+	public static final String PAGE_OK = "/resources/Paper.jsp";
+	public static final String PAGE_ERROR = "/resources/404.jsp";
 	public static final String ATTRIBUTE_MODEL_TO_VIEW = "paper";
 	public static final String ATTRIBUTE_ERR_STR = "errorString";
 	public static final String ATTRIBUTE_ERR_CODE = "errorCode";
@@ -45,13 +44,13 @@ public class PaperController extends DependencyInjectionServlet {
 			}
 
 			Paper modelPaper;
-			int id = Integer.parseInt(req.getParameter(PARAM_ID));
-			Logger.getLogger("LOG").info(
+			String id = req.getParameter(PARAM_ID);
+			log.info(
 					">>>  Add " + ATTRIBUTE_MODEL_TO_VIEW
 							+ " to request attribute");
 
 			if (txManager == null) {
-				Logger.getLogger("LOG").warn("Transaction field is empty");
+				log.warn("Transaction field is empty");
 				modelPaper = paperDao.selectById(id);
 			} else {
 				Callable<Paper> returned = new Callable<Paper>() {
@@ -64,7 +63,7 @@ public class PaperController extends DependencyInjectionServlet {
 			}
 
 			req.setAttribute(ATTRIBUTE_MODEL_TO_VIEW, modelPaper);
-			Logger.getLogger("LOG").info(">>>  Redirect to :" + PAGE_OK);
+			log.info(">>>  Redirect to :" + PAGE_OK);
 			getServletContext().getRequestDispatcher(PAGE_OK)
 					.include(req, resp);
 			return;
@@ -72,10 +71,10 @@ public class PaperController extends DependencyInjectionServlet {
 		} catch (DaoException | NumberFormatException | TransactionException e) {
 			req.setAttribute(ATTRIBUTE_ERR_STR, e.getMessage());
 			req.setAttribute(ATTRIBUTE_ERR_CODE, "404");
-			Logger.getLogger("LOG").error("", e);
+			log.error("", e);
 		}
 
-		Logger.getLogger("LOG").warn(">>>  Redirect to :" + PAGE_ERROR);
+		log.warn(">>>  Redirect to :" + PAGE_ERROR);
 		// resp.sendRedirect(PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 	}

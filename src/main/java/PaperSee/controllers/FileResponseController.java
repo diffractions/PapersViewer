@@ -13,10 +13,12 @@ import javax.servlet.http.HttpServletResponse;
 
 public class FileResponseController extends HttpServlet {
 
+	public static Logger log = Logger.getLogger("LOG");
+	
 	public static final long serialVersionUID = 1L;
 	public static final String PAGE_DIRECTORY = "/resources/DirectoryView.jsp";
 	public static final String PAGE_FILE = "/showFile";
-	public static final String PAGE_ERROR = "404.jsp";
+	public static final String PAGE_ERROR = "/resources/404.jsp";
 	public static final String ATTRIBUTE_ERR_CODE = "errorCode";
 	public static final String ATTRIBUTE_FILE_PATH = "filePath";
 	public static final String ATTRIBUTE_FILES_CHILDREN = "filesChildren";
@@ -25,7 +27,7 @@ public class FileResponseController extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 
-		Logger.getLogger("LOG").debug(">>>  Response from file or directory");
+		log.debug(">>>  Response from file or directory");
 
 		try {
 			String absolutePath = req.getRequestURI().substring(
@@ -34,43 +36,43 @@ public class FileResponseController extends HttpServlet {
 			String path = getServletContext().getRealPath(absolutePath)
 					.replace("%20", " ");
 
-			Logger.getLogger("LOG").debug(">>>  Absolute path : " + absolutePath);
-			Logger.getLogger("LOG").debug(">>>  Real Path : " + path);
+			log.debug(">>>  Absolute path : " + absolutePath);
+			log.debug(">>>  Real Path : " + path);
 			File file = new File(path);
 
 			if (file.exists()) {
  
 				if (file.isDirectory()) {
 
-					Logger.getLogger("LOG").debug(">>>  Directory found");
-					Logger.getLogger("LOG").debug(
+					log.debug(">>>  Directory found");
+					log.debug(
 							">>> Add files from folder in request attribute");
 					req.setAttribute(ATTRIBUTE_FILES_CHILDREN, file.listFiles());
 
-					Logger.getLogger("LOG").debug(">>>  Redirect to " + PAGE_DIRECTORY);
+					log.debug(">>>  Redirect to " + PAGE_DIRECTORY);
 					getServletContext().getRequestDispatcher(PAGE_DIRECTORY)
 							.include(req, resp);
 
 				} else {
-					Logger.getLogger("LOG").debug(">>>  Fille found");
-					Logger.getLogger("LOG").debug(">>> Add file in request attribute");
+					log.debug(">>>  Fille found");
+					log.debug(">>> Add file in request attribute");
 					req.setAttribute(ATTRIBUTE_FILE_PATH, path);
 
 
-					Logger.getLogger("LOG").debug(">>> Det Request Dispatcher: include " + PAGE_FILE);
+					log.debug(">>> Det Request Dispatcher: include " + PAGE_FILE);
 					getServletContext().getRequestDispatcher(PAGE_FILE)
 							.include(req, resp);
 				}
 				return;
 			}
 		} catch (FileNotFoundException | NullPointerException e) {
-			Logger.getLogger("LOG").fatal("", e);
+			log.fatal("", e);
 		}
 
-		Logger.getLogger("LOG").debug(">>>  Fille not found");
-		Logger.getLogger("LOG").debug(">>>  Redirect to " + PAGE_ERROR);
+		log.debug(">>>  Fille not found");
+		log.debug(">>>  Redirect to " + PAGE_ERROR);
 		req.setAttribute(ATTRIBUTE_ERR_CODE, "404");
-		getServletContext().getRequestDispatcher("/" + PAGE_ERROR).include(req,
+		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req,
 				resp);
 
 	}

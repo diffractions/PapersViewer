@@ -15,6 +15,8 @@ import org.apache.log4j.Logger;
 
 abstract public class BaseHTTPFilter implements Filter {
 
+	public static Logger log = Logger.getLogger("LOG");
+	
 	private FilterConfig config;
 
 	public void setFilterConfig(FilterConfig config) {
@@ -27,7 +29,7 @@ abstract public class BaseHTTPFilter implements Filter {
 
 	@Override
 	public void destroy() {
-		Logger.getLogger("LOG").info("DESTROY: " + this.getClass().getSimpleName() );
+		log.info("DESTROY: " + this.getClass().getSimpleName() );
 
 	}
 
@@ -54,8 +56,9 @@ abstract public class BaseHTTPFilter implements Filter {
 
 	@Override
 	public void init(FilterConfig arg0) throws ServletException {
-		Logger.getLogger("LOG").info("INIT: " + this.getClass().getSimpleName() );
+		log.info("INIT: " + this.getClass().getSimpleName() );
 		setFilterConfig(arg0);
+
 
 	}
 
@@ -63,7 +66,7 @@ abstract public class BaseHTTPFilter implements Filter {
 	 * 
 	 */
 	public BaseHTTPFilter() {
-		Logger.getLogger("LOG").info("START: " + this.getClass().getSimpleName() );
+		log.info("START: " + this.getClass().getSimpleName() );
 	}
 
 }

@@ -3,24 +3,23 @@ package entity;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.HashMap;
+import java.util.Map;
+
+import dao.exceptions.DaoSystemException;
 
 public class SimplePaper implements Paper {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + id;
+		result = prime * result + id.hashCode();
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		// println("IN HASH CODE: " + result);
 		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-
-		// println("IN EQUALS: ");
-		// println(">>>  this : " + this);
-		// println(">>>  obj  : " +obj);
 
 		if (this == obj) {
 			return true;
@@ -65,11 +64,11 @@ public class SimplePaper implements Paper {
 		return "[id=" + id + ", name=" + name + ", hash=" + hashCode() + "]";
 	}
 
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -81,14 +80,14 @@ public class SimplePaper implements Paper {
 		this.name = name;
 	}
 
-	private int id;
+	private String id;
 	private String name;
 
 	/**
 	 * @param id
 	 * @param name
 	 */
-	public SimplePaper(int id, String name) {
+	public SimplePaper(String id, String name) {
 		// System.out.println(">>>  FULL PAPER CONSTRUCTOR");
 		this.id = id;
 		this.name = name;
@@ -97,13 +96,14 @@ public class SimplePaper implements Paper {
 	/**
 	 * empty constructor only to correct work serializable
 	 */
+	@Deprecated
 	public SimplePaper() {
 		// println(">>>  EMPTY PAPER CONSTRUCTOR");
 	}
 
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
-		out.write(getId());
+		out.write(getId().getBytes());
 		out.writeObject(getName());
 
 	}
@@ -111,7 +111,7 @@ public class SimplePaper implements Paper {
 	@Override
 	public void readExternal(ObjectInput in) throws IOException,
 			ClassNotFoundException {
-		setId(in.read());
+		setId(in.readLine());
 		setName((String) in.readObject());
 	}
 
@@ -119,4 +119,18 @@ public class SimplePaper implements Paper {
 	public Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
+
+	private Map<String, String> proporties = null;
+
+	@Override
+	public Map<String, String> getProporties() throws DaoSystemException {
+		return proporties;
+	}
+
+	@Override
+	public void setProporties(Map<String, String> proporties)
+			throws DaoSystemException {
+		this.proporties = proporties;
+	}
+
 }

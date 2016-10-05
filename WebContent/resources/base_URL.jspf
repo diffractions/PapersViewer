@@ -1,0 +1,17 @@
+	<%
+		String scheme = request.getScheme();
+		String server = request.getServerName();
+		int port = request.getServerPort();
+		String path = request.getContextPath();
+		StringBuffer sb = new StringBuffer();
+		sb.append(scheme);
+		sb.append("://");
+		sb.append(server);
+		if ((port != -1) && (port != 80)) {
+			sb.append(":");
+			sb.append(port);
+		}
+		sb.append(path);
+		sb.append("/");
+		String baseURL = sb.toString();
+	%>

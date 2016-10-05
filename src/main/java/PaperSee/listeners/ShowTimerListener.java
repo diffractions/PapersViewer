@@ -5,8 +5,6 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import org.apache.log4j.Logger;
-import static utility.LogUtils.timerInitialize;
-import static utility.LogUtils.timerDestroy;
 
 /**
  * Application Lifecycle Listener implementation class ShowTimerListener
@@ -19,8 +17,10 @@ public class ShowTimerListener implements ServletContextListener {
 	 * @see ServletContextListener#contextDestroyed(ServletContextEvent)
 	 */
 	public void contextDestroyed(ServletContextEvent sce) {
+
 		Logger.getLogger("LOG").info("DESTROY: Show Timer Listener");
-		timerDestroy();
+		Logger.getLogger("TIMER").info("TIMER.STOP");
+
 	}
 
 	/**
@@ -28,7 +28,8 @@ public class ShowTimerListener implements ServletContextListener {
 	 */
 	public void contextInitialized(ServletContextEvent sce) {
 		Logger.getLogger("LOG").info("INITIALIZE: Show Timer Listener");
-		timerInitialize();
+		Logger.getLogger("TIMER").info("TIMER.START");
+
 	}
 
 }

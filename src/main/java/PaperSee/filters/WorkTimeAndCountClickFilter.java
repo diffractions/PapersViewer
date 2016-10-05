@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
-
 //@WebFilter(filterName = "WorkTimeAndCountClickFilter", urlPatterns = { "/*" })
 public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 
@@ -39,10 +37,8 @@ public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 				TimeUnit.NANOSECONDS);
 
 		addTime(requestURI, session, time);
-		Logger.getLogger("LOG").info(
-				new StringBuilder("Time to create response in server: ")
-						.append(time).append(" ms;\nRequest uri: ")
-						.append(requestURI));
+		log.info(new StringBuilder("Time to create response in server: ")
+				.append(time).append(" ms;\nRequest uri: ").append(requestURI));
 
 	}
 
@@ -51,13 +47,18 @@ public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 			HttpSession session) throws IOException {
 		if (!arg1.isCommitted())
 			arg1.getWriter().write(
-					"<hr>You visit this page "
+					"	<div class=\"container showgrid\"><hr>You visit this page "
 							+ count
 							+ " times in last "
 							+ (System.currentTimeMillis() - session
-									.getCreationTime()) / 1000.0 + " seconds."
-									+ "<br> class loader " + this.getClass().getClassLoader()
-		+ "<br> class loader " + this.getClass().getClassLoader().getSystemClassLoader());
+									.getCreationTime())
+							/ 1000.0
+							+ " seconds."
+							+ "<br> class loader "
+							+ this.getClass().getClassLoader()
+							+ "<br> class loader "
+							+ this.getClass().getClassLoader()
+									.getSystemClassLoader() + "</div>");
 	}
 
 	private int addRequestInStory(String requestURI, HttpSession session) {
@@ -72,25 +73,14 @@ public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 		return count;
 	}
 
-	private void addPathToSessionLoadTime(
-			ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>> loadTime,
-			String uri) {
-		if (loadTime.get(uri) == null) {
-			Logger.getLogger("LOG").debug(">>>  Add new path to Load Time");
-			loadTime.put(uri, new CopyOnWriteArrayList<Integer>());
-		} else {
-			Logger.getLogger("LOG").debug(">>>  Path was found in Load Time");
-		}
-	}
-
 	private int addPathToSessionStory(
 			ConcurrentHashMap<String, Integer> sessionStoryMap, String uri) {
 		int count;
 		if (sessionStoryMap.get(uri) != null) {
-			Logger.getLogger("LOG").debug(">>>  Path was found in session story");
+			log.debug(">>>  Path was found in session story");
 			count = sessionStoryMap.get(uri);
 		} else {
-			Logger.getLogger("LOG").debug(">>>  Add new path to session story");
+			log.debug(">>>  Add new path to session story");
 			count = 0;
 		}
 		return count;
@@ -101,11 +91,11 @@ public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 			HttpSession session) {
 		ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>> loadTimes;
 		if (session.getAttribute(ATTRIBUTE_LOAD_TIMES) != null) {
-			Logger.getLogger("LOG").debug(">>>  Session Load Time map was called");
+			log.debug(">>>  Session Load Time map was called");
 			loadTimes = ((ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>>) session
 					.getAttribute(ATTRIBUTE_LOAD_TIMES));
 		} else {
-			Logger.getLogger("LOG").debug(">>>  Session Load Time map was created");
+			log.debug(">>>  Session Load Time map was created");
 			loadTimes = new ConcurrentHashMap<>();
 			session.setAttribute(ATTRIBUTE_LOAD_TIMES, loadTimes);
 		}
@@ -117,11 +107,11 @@ public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 			HttpSession session) {
 		ConcurrentHashMap<String, Integer> storyMap;
 		if (session.getAttribute(ATTRIBUTE_MAP_STORY) != null) {
-			Logger.getLogger("LOG").debug(">>>  Session story map was called");
+			log.debug(">>>  Session story map was called");
 			storyMap = ((ConcurrentHashMap<String, Integer>) session
 					.getAttribute(ATTRIBUTE_MAP_STORY));
 		} else {
-			Logger.getLogger("LOG").debug(">>>  Session story map was created");
+			log.debug(">>>  Session story map was created");
 			storyMap = new ConcurrentHashMap<>();
 			session.setAttribute(ATTRIBUTE_MAP_STORY, storyMap);
 		}
@@ -138,6 +128,17 @@ public class WorkTimeAndCountClickFilter extends BaseHTTPFilter {
 			loadTime.get(requestURI).add(time);
 		}
 
+	}
+
+	private void addPathToSessionLoadTime(
+			ConcurrentHashMap<String, CopyOnWriteArrayList<Integer>> loadTime,
+			String uri) {
+		if (loadTime.get(uri) == null) {
+			log.debug(">>>  Add new path to Load Time");
+			loadTime.put(uri, new CopyOnWriteArrayList<Integer>());
+		} else {
+			log.debug(">>>  Path was found in Load Time");
+		}
 	}
 
 }

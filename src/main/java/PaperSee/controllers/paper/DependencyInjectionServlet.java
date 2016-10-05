@@ -21,7 +21,7 @@ import org.apache.log4j.Logger;
  * Servlet implementation class InjectAnnotationsPaperController
  */
 public class DependencyInjectionServlet extends HttpServlet {
-
+	public static Logger log = Logger.getLogger("LOG");
 	public static final String APP_CTX_PATH = "project_context";
 
 	private static final long serialVersionUID = 1L;
@@ -38,7 +38,7 @@ public class DependencyInjectionServlet extends HttpServlet {
 		if (path == null) {
 			throw new ServletException(APP_CTX_PATH + "init param==null");
 		}
-		Logger.getLogger("LOG").debug(
+		log.debug(
 				">>>  APP_CTX_PATH : " + APP_CTX_PATH + ">>>  Path : " + path);
 
 		try {
@@ -79,16 +79,16 @@ public class DependencyInjectionServlet extends HttpServlet {
 		} catch (BeansException | SecurityException | IllegalArgumentException
 				| IllegalAccessException | InjectInitialException e) {
 			status = "EXCEPTION";
-			Logger.getLogger("LOG").error("", e);
+			log.error("", e);
 		}
 
-		Logger.getLogger("LOG").info(status + "." + this.getClass().getSimpleName());
+		log.info(status + "." + this.getClass().getSimpleName());
 
 	}
 
 	@Override
 	public void destroy() {
-		Logger.getLogger("LOG").info("DESTROY: " + this.getClass().getSimpleName());
+		log.info("DESTROY: " + this.getClass().getSimpleName());
 		super.destroy();
 	}
 }

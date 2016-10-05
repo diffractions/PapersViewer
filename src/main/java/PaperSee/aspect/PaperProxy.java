@@ -8,14 +8,17 @@ import entity.Paper;
 import org.apache.log4j.Logger;
 
 public class PaperProxy {
-	private LinkedHashMap<Integer, Paper> paperProxyMap = new LinkedHashMap<>();
+	private LinkedHashMap<String, Paper> paperProxyMap = new LinkedHashMap<>();
+	public static Logger log = Logger.getLogger("LOG");
 
 	public Object proxy(ProceedingJoinPoint call) throws Throwable {
+		log.trace("PROXY.IN");
+		
 		try {
-			Logger.getLogger("LOG").trace("PROXY.IN");
+
 			if (call.getArgs().length > 0
 					&& paperProxyMap.containsKey(call.getArgs()[0])) {
-				Logger.getLogger("LOG").info("ProxyMap" + paperProxyMap);
+				log.info("ProxyMap" + paperProxyMap);
 
 				return paperProxyMap.get(call.getArgs()[0]);
 
@@ -27,7 +30,7 @@ public class PaperProxy {
 			}
 			return returned;
 		} finally {
-			Logger.getLogger("LOG").trace("PROXY.OUT");
+			log.trace("PROXY.OUT");
 		}
 	}
 }

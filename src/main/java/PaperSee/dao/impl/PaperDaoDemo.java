@@ -1,5 +1,7 @@
 package dao.impl;
 
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -10,24 +12,24 @@ import entity.Paper;
 
 public class PaperDaoDemo implements PaperDao {
 
-	private ConcurrentHashMap<Integer, Paper> papers;
+	private ConcurrentHashMap<String, Paper> papers;
 
-	public ConcurrentHashMap<Integer, Paper> getPapers() {
+	public ConcurrentHashMap<String, Paper> getPapers() {
 		return papers;
 	}
 
-	public void setPapers(ConcurrentHashMap<Integer, Paper> papers) {
+	public void setPapers(ConcurrentHashMap<String, Paper> papers) {
 		this.papers = papers;
 	}
 
-	public CopyOnWriteArraySet<Paper> selectAll() throws DaoSystemException {
+	public CopyOnWriteArraySet<Paper> selectAll(String [] collNames, String [] sortKeys) throws DaoSystemException {
 		if (papers != null)
 			return new CopyOnWriteArraySet<Paper>(papers.values());
 		throw new DaoSystemException("Papers map is empty !");
 
 	}
 
-	public Paper selectById(int id) throws DaoSystemException,
+	public Paper selectById(String id) throws DaoSystemException,
 			NoSuchEntityException {
 
 		Paper paper;
@@ -44,6 +46,20 @@ public class PaperDaoDemo implements PaperDao {
 
 		// println(" >>>" + paper.hashCode());
 		return paper;
+	}
+
+	@Override
+	public CopyOnWriteArraySet<Paper> search(String str)
+			throws DaoSystemException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<Map<String, List<String>>> selectValues(String paperName, String id)
+			throws DaoSystemException, NoSuchEntityException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

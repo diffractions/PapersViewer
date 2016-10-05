@@ -17,7 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 public class ElementsWiewController extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
+	public static Logger log = Logger.getLogger("LOG");
+	
 	public static final String ATTRIBUTE_FILE_PATH = "filePath";
 
 	@Override
@@ -31,13 +32,13 @@ public class ElementsWiewController extends HttpServlet {
 
 			if (relativeWebPath != null && mimeType != null) {
 
-				Logger.getLogger("LOG").debug("FOUND FILE WITH TYPES");
+				log.debug("FOUND FILE WITH TYPES");
 
-				Logger.getLogger("LOG").debug(">>>  Relative Web Path : " + relativeWebPath);
+				log.debug(">>>  Relative Web Path : " + relativeWebPath);
 				String absolutePath = getServletContext().getRealPath(
 						relativeWebPath);
-				Logger.getLogger("LOG").debug(">>>  Real Path : " + absolutePath);
-				Logger.getLogger("LOG").debug(
+				log.debug(">>>  Real Path : " + absolutePath);
+				log.debug(
 						">>> Set Content Type (mime-type) : " + getInitParameter("mime-type"));
 
 				resp.setContentType(mimeType);
@@ -45,11 +46,11 @@ public class ElementsWiewController extends HttpServlet {
 
 			} else {
 
-				Logger.getLogger("LOG").debug("TYPES OR FILE NOT FOUND, response by url");
+				log.debug("TYPES OR FILE NOT FOUND, response by url");
 				writeFile((String) req.getAttribute(ATTRIBUTE_FILE_PATH), resp);
 			}
 		} catch (IOException e) {
-			Logger.getLogger("LOG").fatal("", e);
+			log.fatal("", e);
 		}
 	}
 
@@ -59,7 +60,7 @@ public class ElementsWiewController extends HttpServlet {
 				FileChannel fileChannel = fileInputStream.getChannel();
 				OutputStream os = resp.getOutputStream();) {
 
-			Logger.getLogger("LOG").debug(">>>  Write file in output stream");
+			log.debug(">>>  Write file in output stream");
 
 			ByteBuffer buffer = ByteBuffer.allocate((int) fileChannel.size());
 			fileChannel.read(buffer);

@@ -18,8 +18,7 @@ import dao.exceptions.DaoException;
 import entity.Paper;
 import transaction.TransactionManager;
 import transaction.exception.TransactionException;
-import utility.exception.ReadWriteCodeException;
-import org.apache.log4j.Logger;
+import utility.exception.ReadWriteCodeException; 
 import static utility.CookiePaperSetUtil.getPapersFromCookie;
 import static utility.CookiePaperSetUtil.writePapersInCookie;
 
@@ -28,7 +27,8 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	private static final long serialVersionUID = 1L;
 
 	public static final String PAGE_OK = "get.do";
-	public static final String PAGE_ERROR = "/404.jsp";
+	public static final String PAGE_ERROR = "/resources/404.jsp";
+//	public static final String PAGE_ERROR = "/404.jsp";
 	public static final String PARAM_ID = "id";
 	public static final String COOKIE_NAME = "selected";
 	public static final String ATTR_ACTIVE_USER_REQUEST_COUNT = "countOfActiveRequest";
@@ -51,11 +51,11 @@ public class SelectPaperController extends DependencyInjectionServlet {
 				throw new DaoException("Papers DAO not found");
 			}
 
-			int id = Integer.parseInt(req.getParameter(PARAM_ID));
+			String id =  req.getParameter(PARAM_ID);
 			Paper paper;
 
 			if (txManager == null) {
-				Logger.getLogger("LOG").info("Transaction field is empty");
+				log.info("Transaction field is empty");
 				paper = paperDao.selectById(id);
 
 			} else {
@@ -72,20 +72,20 @@ public class SelectPaperController extends DependencyInjectionServlet {
 				throw new NullPointerException("Selected paper not found");
 			}
 
-			Logger.getLogger("LOG").debug(">>>  ADD SELECTED STORY COOKIE");
+			log.debug(">>>  ADD SELECTED STORY COOKIE");
 			addPaperInStory(req, resp, paper);
-			Logger.getLogger("LOG").info(">>>  Redirect to :" + PAGE_OK);
+			log.info(">>>  Redirect to :" + PAGE_OK);
 			resp.sendRedirect(PAGE_OK + "?" + PARAM_ID + "=" + id);
 			return;
 
 		} catch (DaoException | NumberFormatException | NullPointerException
 				| ReadWriteCodeException | TransactionException e) {
-			Logger.getLogger("LOG").error("", e);
+			log.error("", e);
 		}
 
 
 		req.setAttribute(ATTRIBUTE_ERR_CODE, "404");
-		Logger.getLogger("LOG").info(">>>  Redirect to :" + PAGE_ERROR);
+		log.info(">>>  Redirect to :" + PAGE_ERROR);
 		getServletContext().getRequestDispatcher(PAGE_ERROR).include(req, resp);
 
 	}
@@ -152,10 +152,10 @@ public class SelectPaperController extends DependencyInjectionServlet {
 
 		if (papers == null
 				&& (papers = getPapersFromCookie(req.getCookies(), COOKIE_NAME)) == null) {
-			Logger.getLogger("LOG").debug(">>>  Paper from this request cookie:\n" + papers);
+			log.debug(">>>  Paper from this request cookie:\n" + papers);
 			papers = Collections.singleton(paper);
 		} else {
-			Logger.getLogger("LOG").info(">>>  Paper from this request cookie:\n" + papers);
+			log.info(">>>  Paper from this request cookie:\n" + papers);
 			papers = new HashSet<Paper>(papers);
 			papers.add(paper);
 			papers = Collections.unmodifiableSet(papers);
@@ -168,7 +168,7 @@ public class SelectPaperController extends DependencyInjectionServlet {
 	private void writeUserSelectedPaperSet(HttpServletRequest req,
 			HttpServletResponse resp, Set<Paper> papers)
 			throws ReadWriteCodeException {
-		Logger.getLogger("LOG").debug(">>>  Papers sending in request cookie:\n" + papers);
+		log.debug(">>>  Papers sending in request cookie:\n" + papers);
 		resp.addCookie(writePapersInCookie(papers, COOKIE_NAME,
 				req.getContextPath() + "/"));
 	}

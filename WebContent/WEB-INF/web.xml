@@ -19,38 +19,54 @@
 		<param-name>project_context</param-name>
 		<param-value>/aspects_project_context.xml</param-value>
 	</context-param>
-	<servlet>
-		<servlet-name>404</servlet-name>
-		<jsp-file>/resources/404.jsp</jsp-file>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>404</servlet-name>
-		<url-pattern>/404.jsp</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>OK</servlet-name>
-		<jsp-file>/resources/ok.jsp</jsp-file>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>OK</servlet-name>
-		<url-pattern>/ok.jsp</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>PaperJ</servlet-name>
-		<jsp-file>/resources/Paper.jsp</jsp-file>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>PaperJ</servlet-name>
-		<url-pattern>/Paper.jsp</url-pattern>
-	</servlet-mapping>
-	<servlet>
-		<servlet-name>PaperAllJ</servlet-name>
-		<jsp-file>/resources/PaperAll.jsp</jsp-file>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>PaperAllJ</servlet-name>
-		<url-pattern>/PaperAll.jsp</url-pattern>
-	</servlet-mapping>
+
+
+
+	<!-- set path to JSP -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>404</servlet-name> -->
+	<!-- <jsp-file>/resources/404.jsp</jsp-file> -->
+	<!-- </servlet> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>404</servlet-name> -->
+	<!-- <url-pattern>/404.jsp</url-pattern> -->
+	<!-- </servlet-mapping> -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>OK</servlet-name> -->
+	<!-- <jsp-file>/resources/ok.jsp</jsp-file> -->
+	<!-- </servlet> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>OK</servlet-name> -->
+	<!-- <url-pattern>/ok.jsp</url-pattern> -->
+	<!-- </servlet-mapping> -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>PaperJ</servlet-name> -->
+	<!-- <jsp-file>/resources/Paper.jsp</jsp-file> -->
+	<!-- </servlet> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>PaperJ</servlet-name> -->
+	<!-- <url-pattern>/Paper.jsp</url-pattern> -->
+	<!-- </servlet-mapping> -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>PaperAllJ</servlet-name> -->
+	<!-- <jsp-file>/resources/PaperAll.jsp</jsp-file> -->
+	<!-- </servlet> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>PaperAllJ</servlet-name> -->
+	<!-- <url-pattern>/PaperAll.jsp</url-pattern> -->
+	<!-- </servlet-mapping> -->
+	<!-- <servlet> -->
+	<!-- <servlet-name>searchj</servlet-name> -->
+	<!-- <jsp-file>/resources/Search.jsp</jsp-file> -->
+	<!-- </servlet> -->
+	<!-- <servlet-mapping> -->
+	<!-- <servlet-name>searchj</servlet-name> -->
+	<!-- <url-pattern>/search.jsp</url-pattern> -->
+	<!-- <url-pattern>/Search.jsp</url-pattern> -->
+	<!-- </servlet-mapping> -->
+
+
+	<!-- set path to JSP servlets -->
 	<servlet>
 		<servlet-name>Selected</servlet-name>
 		<servlet-class>controllers.paper.SelectPaperController</servlet-class>
@@ -75,6 +91,24 @@
 		<servlet-name>Paper</servlet-name>
 		<url-pattern>/get.do</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<servlet-name>Search</servlet-name>
+		<servlet-class>controllers.paper.SearchPaperController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Search</servlet-name>
+		<url-pattern>/search.do</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>Change</servlet-name>
+		<servlet-class>controllers.paper.PaperChangeController</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Change</servlet-name>
+		<url-pattern>/change.do</url-pattern>
+	</servlet-mapping>
+
+
 
 	<servlet>
 		<servlet-name>file</servlet-name>
@@ -84,6 +118,7 @@
 		<servlet-name>file</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
 
 	<!-- this servlets use ine type of controller to show information -->
 	<servlet>
@@ -103,6 +138,7 @@
 		<url-pattern>/view</url-pattern>
 		<url-pattern>/view/</url-pattern>
 	</servlet-mapping>
+
 	<servlet>
 		<servlet-name>picture</servlet-name>
 		<servlet-class>controllers.ElementsWiewController</servlet-class>
@@ -139,10 +175,13 @@
 		<url-pattern>/showFile/</url-pattern>
 	</servlet-mapping>
 
+
+	<!-- error page -->
 	<error-page>
-		<error-code>500</error-code>
+		<error-code>404</error-code>
 		<location>/resources/404.jsp</location>
 	</error-page>
+
 
 	<!-- it can not be declared troug annotation that order of them failed -->
 	<filter>
@@ -164,19 +203,17 @@
 
 
 	<!-- these components declared trogh annotations -->
-
-	<!-- <listener> -->
-	<!-- <listener-class>listeners.SessionWriteFileAndChangeListener</listener-class> -->
-	<!-- </listener> -->
-	<!-- <listener> -->
-	<!-- <listener-class>listeners.DriverCreatorListener</listener-class> -->
-	<!-- </listener> -->
-	<!-- <listener> -->
-	<!-- <listener-class>listeners.ShowTimerListener</listener-class> -->
-	<!-- </listener> -->
-	<!-- <listener> -->
-	<!-- <listener-class>listeners.RequestInformationListener</listener-class> -->
-	<!-- </listener> -->
-
+	<listener>
+		<listener-class>listeners.SessionWriteFileAndChangeListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>listeners.DriverCreatorListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>listeners.ShowTimerListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>listeners.RequestInformationListener</listener-class>
+	</listener>
 
 </web-app>

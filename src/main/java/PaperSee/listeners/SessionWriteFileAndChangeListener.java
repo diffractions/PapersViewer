@@ -32,29 +32,28 @@ public class SessionWriteFileAndChangeListener implements
 		HttpSessionAttributeListener, HttpSessionActivationListener,
 		HttpSessionBindingListener {
 
+	public static Logger log = Logger.getLogger("LOG");
+
 	@Override
 	public void sessionIdChanged(HttpSessionEvent arg0, String arg1) {
 
-		Logger.getLogger("LOG").trace(
-				"|\n|========== SESSION ID WAS CHANGED =========="
-						+ "\n--------SESSION INFO--------"
-						+ "\n|--->  New session id : "
-						+ arg0.getSession().getId()
-						+ "\n|--->  Session max inactive time : "
-						+ arg0.getSession().getMaxInactiveInterval());
+		log.trace("|\n|========== SESSION ID WAS CHANGED =========="
+				+ "\n--------SESSION INFO--------"
+				+ "\n|--->  New session id : " + arg0.getSession().getId()
+				+ "\n|--->  Session max inactive time : "
+				+ arg0.getSession().getMaxInactiveInterval());
 
 	}
 
 	@Override
 	public void sessionCreated(HttpSessionEvent arg0) {
 		HttpSession session = arg0.getSession();
-		Logger.getLogger("LOG").trace(
-				"|\n|========== SESSION WAS CREATED =========="
-						+ "\n|===>> SESSION INFO" + "\n|--->  Session id : "
-						+ session.getId() + "\n|--->  Session from : "
-						+ new Date(session.getCreationTime())
-						+ "\n|--->  Session max inactive time : "
-						+ session.getMaxInactiveInterval());
+		log.trace("|\n|========== SESSION WAS CREATED =========="
+				+ "\n|===>> SESSION INFO" + "\n|--->  Session id : "
+				+ session.getId() + "\n|--->  Session from : "
+				+ new Date(session.getCreationTime())
+				+ "\n|--->  Session max inactive time : "
+				+ session.getMaxInactiveInterval());
 
 	}
 
@@ -62,11 +61,10 @@ public class SessionWriteFileAndChangeListener implements
 	@Override
 	public void sessionDestroyed(HttpSessionEvent arg0) {
 
-		Logger.getLogger("LOG").trace(
-				"|\n|========== SESSION WAS DESTROYED =========="
-						+ "\n|===>> SESSION INFO"
-						+ "\n|--->  Session was created by : "
-						+ arg0.getSession().getAttribute("first Request URI"));
+		log.trace("|\n|========== SESSION WAS DESTROYED =========="
+				+ "\n|===>> SESSION INFO"
+				+ "\n|--->  Session was created by : "
+				+ arg0.getSession().getAttribute("first Request URI"));
 
 		writeStory(
 				arg0.getSession()
@@ -106,14 +104,14 @@ public class SessionWriteFileAndChangeListener implements
 				writer.write(e + "; mean time of load:" + (sum / e.getValue())
 						+ "." + System.lineSeparator());
 			}
-			Logger.getLogger("LOG").trace(sb2);
+			log.trace(sb2);
 			writer.write("Save date " + new Date(System.currentTimeMillis())
 					+ System.lineSeparator()
 					+ "--------------------------------"
 					+ System.lineSeparator());
 			writer.flush();
 		} catch (IOException e) {
-			Logger.getLogger("LOG").error("", e);
+			log.error("", e);
 		}
 
 	}
@@ -121,10 +119,9 @@ public class SessionWriteFileAndChangeListener implements
 	@Override
 	public void attributeAdded(HttpSessionBindingEvent event) {
 
-		Logger.getLogger("LOG").trace(
-				"|\n|===>> Session attribute added" + "\n|--->  Atribute name:"
-						+ event.getName() + "\n|--->  Atribute value:"
-						+ event.getValue());
+		log.trace("|\n|===>> Session attribute added"
+				+ "\n|--->  Atribute name:" + event.getName()
+				+ "\n|--->  Atribute value:" + event.getValue());
 	}
 
 	@Override

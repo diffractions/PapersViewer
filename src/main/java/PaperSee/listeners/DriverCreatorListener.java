@@ -14,14 +14,14 @@ import static utility.JBDCUtil.registerDrivers;
  */
 @WebListener
 public class DriverCreatorListener implements ServletContextListener {
- 
-	
-	
+
+	public static Logger log = Logger.getLogger("LOG");
+
 	/**
 	 * @see ServletContextListener#contextDestroyed(ServletContextEvent)
 	 */
 	public void contextDestroyed(ServletContextEvent sce) {
-		Logger.getLogger("LOG").info("DESTROY: Driver Creator Listener");
+		log.info("DESTROY: Driver Creator Listener");
 		deregisterDrivers();
 	}
 
@@ -29,7 +29,7 @@ public class DriverCreatorListener implements ServletContextListener {
 	 * @see ServletContextListener#contextInitialized(ServletContextEvent)
 	 */
 	public void contextInitialized(ServletContextEvent sce) {
-		Logger.getLogger("LOG").info("INITIALIZE: Driver Creator Listener");
+		log.info("INITIALIZE: Driver Creator Listener");
 		registerDrivers();
 	}
 

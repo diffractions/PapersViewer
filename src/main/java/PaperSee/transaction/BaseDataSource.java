@@ -1,5 +1,8 @@
 package transaction;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,7 +11,7 @@ import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
-public class BaseDataSource implements DataSource {
+public abstract class BaseDataSource implements DataSource {
 
 	public BaseDataSource() {
 	}
@@ -49,14 +52,14 @@ public class BaseDataSource implements DataSource {
 	}
 
 	@Override
-	public Connection getConnection() throws SQLException {
-		return null;
-	}
+	public abstract Connection getConnection() ;
 
 	@Override
 	public Connection getConnection(String username, String password)
 			throws SQLException {
 		return null;
 	}
+	
+
 
 }
